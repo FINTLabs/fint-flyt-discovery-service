@@ -15,5 +15,11 @@ fint:
 spring:
   kafka:
     bootstrap-servers: localhost:29092
+  datasource:
+    hikari:
+      schema: fintlabs_no
+    url: jdbc:postgresql://localhost:5437/fint-flyt-discovery-service
+    username: postgres
+    password: password
 server:
-  port: 8085
+  port: 8084
