@@ -5,6 +5,13 @@ metadata:
 spec:
   itemPath: "vaults/aks-alpha-vault/items/aiven-kafka"
 ---
+apiVersion: onepassword.com/v1
+kind: OnePasswordItem
+metadata:
+  name: viken-no-fint-flyt-discovery-service
+spec:
+  itemPath: "vaults/aks-alpha-vault/items/viken-no-fint-flyt-discovery-service"
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -86,6 +93,8 @@ spec:
           envFrom:
             - secretRef:
                 name: aiven-kafka
+            - secretRef:
+                name: viken-no-fint-flyt-discovery-service
           env:
             - { name: TZ, value: Europe/Oslo }
             - { name: JAVA_TOOL_OPTIONS, value: '-XX:+ExitOnOutOfMemoryError -Xmx1840M' }
