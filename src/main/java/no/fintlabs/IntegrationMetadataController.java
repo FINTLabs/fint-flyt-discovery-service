@@ -1,12 +1,14 @@
 package no.fintlabs;
 
 
-import no.fintlabs.model.fint.IntegrationMetadataWrapper;
+import no.fintlabs.model.fint.IntegrationMetadata;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
 
 import static no.fintlabs.resourceserver.UrlPaths.INTERNAL_API;
 
@@ -21,14 +23,14 @@ public class IntegrationMetadataController {
     }
 
     @GetMapping
-    public ResponseEntity<IntegrationMetadataWrapper> getIntegrationMetadataForSourceApplication(
+    public ResponseEntity<Collection<IntegrationMetadata>> getIntegrationMetadataForSourceApplication(
             @RequestParam String sourceApplicationId
     ) {
-        IntegrationMetadataWrapper integrationMetadataWrapper =
-                integrationMetadataService.findLatestVersionPerSourceApplicationIntegrationIdForSourceApplication(
+        Collection<IntegrationMetadata> integrationMetadata =
+                integrationMetadataService.findLatestVersionForSourceApplication(
                         sourceApplicationId
                 );
-        return ResponseEntity.ok(integrationMetadataWrapper);
+        return ResponseEntity.ok(integrationMetadata);
     }
 
 }

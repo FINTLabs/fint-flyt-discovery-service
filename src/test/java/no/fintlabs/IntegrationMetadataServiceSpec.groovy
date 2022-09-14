@@ -1,7 +1,6 @@
 package no.fintlabs
 
 import no.fintlabs.model.fint.IntegrationMetadata
-import no.fintlabs.model.fint.IntegrationMetadataWrapper
 import spock.lang.Specification
 
 class IntegrationMetadataServiceSpec extends Specification {
@@ -60,8 +59,8 @@ class IntegrationMetadataServiceSpec extends Specification {
                         .build()
 
         when:
-        IntegrationMetadataWrapper integrationMetadataWrapper = integrationMetadataService
-                .findLatestVersionPerSourceApplicationIntegrationIdForSourceApplication("1")
+        Collection<IntegrationMetadata> integrationMetadata = integrationMetadataService
+                .findLatestVersionForSourceApplication("1")
 
         then:
         1 * integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication("1") >> List.of(
@@ -69,10 +68,8 @@ class IntegrationMetadataServiceSpec extends Specification {
                 integrationMetadata2,
                 integrationMetadata3
         )
-        integrationMetadataWrapper.integrationMetadataPerSourceApplicationIntegrationId.size() == 3
-        integrationMetadataWrapper.integrationMetadataPerSourceApplicationIntegrationId.get("TEST-1").is(integrationMetadata1)
-        integrationMetadataWrapper.integrationMetadataPerSourceApplicationIntegrationId.get("TEST-2").is(integrationMetadata2)
-        integrationMetadataWrapper.integrationMetadataPerSourceApplicationIntegrationId.get("TEST-3").is(integrationMetadata3)
+        integrationMetadata.size() == 3
+        integrationMetadata.containsAll(integrationMetadata1, integrationMetadata2, integrationMetadata3)
     }
 
 }

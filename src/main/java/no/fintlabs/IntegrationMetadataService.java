@@ -1,12 +1,9 @@
 package no.fintlabs;
 
 import no.fintlabs.model.fint.IntegrationMetadata;
-import no.fintlabs.model.fint.IntegrationMetadataWrapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Collection;
 
 @Service
 public class IntegrationMetadataService {
@@ -25,17 +22,10 @@ public class IntegrationMetadataService {
         return integrationMetadataRepository.save(integrationMetadata);
     }
 
-    public IntegrationMetadataWrapper findLatestVersionPerSourceApplicationIntegrationIdForSourceApplication(
+    public Collection<IntegrationMetadata> findLatestVersionForSourceApplication(
             String sourceApplicationId
     ) {
-        Map<String, IntegrationMetadata> integrationMetadataPerSourceApplicationIntegrationId =
-                integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId)
-                        .stream()
-                        .collect(Collectors.toMap(
-                                IntegrationMetadata::getSourceApplicationIntegrationId,
-                                Function.identity()
-                        ));
-        return new IntegrationMetadataWrapper(integrationMetadataPerSourceApplicationIntegrationId);
+        return integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId);
     }
 
 }
