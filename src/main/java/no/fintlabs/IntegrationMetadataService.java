@@ -4,6 +4,7 @@ import no.fintlabs.model.fint.IntegrationMetadata;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class IntegrationMetadataService {
@@ -26,6 +27,17 @@ public class IntegrationMetadataService {
             String sourceApplicationId
     ) {
         return integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId);
+    }
+
+    public Collection<IntegrationMetadata> findAllForSourceApplicationAndSourceApplicationIntegration(
+            String sourceApplicationId,
+            String sourceApplicationIntegrationId
+    ) {
+        return integrationMetadataRepository
+                .findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
+                        sourceApplicationId,
+                        sourceApplicationIntegrationId
+                );
     }
 
 }

@@ -33,4 +33,17 @@ public class IntegrationMetadataController {
         return ResponseEntity.ok(integrationMetadata);
     }
 
+    @GetMapping
+    public ResponseEntity<Collection<IntegrationMetadata>> getIntegrationMetadataForSourceApplicationAndSourceApplicationIntegrationId(
+            @RequestParam String sourceApplicationId,
+            @RequestParam String sourceApplicationIntegrationId
+    ) {
+        Collection<IntegrationMetadata> integrationMetadata =
+                integrationMetadataService.findAllForSourceApplicationAndSourceApplicationIntegration(
+                        sourceApplicationId,
+                        sourceApplicationIntegrationId
+                );
+        return ResponseEntity.ok(integrationMetadata);
+    }
+
 }

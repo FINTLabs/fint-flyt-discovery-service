@@ -43,4 +43,9 @@ public interface IntegrationMetadataRepository extends JpaRepository<Integration
             @Param(value = "sourceApplicationId") String sourceApplicationId
     );
 
+    Collection<IntegrationMetadata> findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
+            String sourceApplicationId,
+            String sourceApplicationIntegrationId
+    );
+
 }
