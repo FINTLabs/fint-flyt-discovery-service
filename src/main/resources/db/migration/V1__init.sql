@@ -3,6 +3,7 @@ create table instance_element_metadata
     id                                  bigserial not null,
     display_name                        varchar(255),
     key                                 varchar(255),
+    type                                varchar(255),
     integration_metadata_id             int8,
     parent_instance_element_metadata_id int8,
     primary key (id)
@@ -11,7 +12,7 @@ create table integration_metadata
 (
     id                                 bigserial not null,
     integration_display_name           varchar(255),
-    source_application_id              varchar(255),
+    source_application_id              int8,
     source_application_integration_id  varchar(255),
     source_application_integration_uri varchar(255),
     version                            int4,

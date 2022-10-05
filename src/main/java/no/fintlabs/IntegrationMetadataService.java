@@ -24,13 +24,13 @@ public class IntegrationMetadataService {
     }
 
     public Collection<IntegrationMetadata> findLatestVersionForSourceApplication(
-            String sourceApplicationId
+            Long sourceApplicationId
     ) {
         return integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId);
     }
 
     public Collection<IntegrationMetadata> findAllForSourceApplicationAndSourceApplicationIntegration(
-            String sourceApplicationId,
+            Long sourceApplicationId,
             String sourceApplicationIntegrationId
     ) {
         return integrationMetadataRepository

@@ -25,7 +25,7 @@ public class IntegrationMetadata {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    private String sourceApplicationId;
+    private Long sourceApplicationId;
 
     private String sourceApplicationIntegrationId;
 

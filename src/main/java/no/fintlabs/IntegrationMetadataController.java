@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static no.fintlabs.resourceserver.UrlPaths.INTERNAL_API;
 
@@ -24,25 +25,19 @@ public class IntegrationMetadataController {
 
     @GetMapping
     public ResponseEntity<Collection<IntegrationMetadata>> getIntegrationMetadataForSourceApplication(
-            @RequestParam String sourceApplicationId
+            @RequestParam Long sourceApplicationId,
+            @RequestParam Optional<String> sourceApplicationIntegrationId
     ) {
         Collection<IntegrationMetadata> integrationMetadata =
-                integrationMetadataService.findLatestVersionForSourceApplication(
-                        sourceApplicationId
-                );
-        return ResponseEntity.ok(integrationMetadata);
-    }
-
-    @GetMapping
-    public ResponseEntity<Collection<IntegrationMetadata>> getIntegrationMetadataForSourceApplicationAndSourceApplicationIntegrationId(
-            @RequestParam String sourceApplicationId,
-            @RequestParam String sourceApplicationIntegrationId
-    ) {
-        Collection<IntegrationMetadata> integrationMetadata =
-                integrationMetadataService.findAllForSourceApplicationAndSourceApplicationIntegration(
-                        sourceApplicationId,
-                        sourceApplicationIntegrationId
-                );
+                sourceApplicationIntegrationId.isPresent()
+                        ?
+                        integrationMetadataService.findAllForSourceApplicationAndSourceApplicationIntegration(
+                                sourceApplicationId,
+                                sourceApplicationIntegrationId.get())
+                        :
+                        integrationMetadataService.findLatestVersionForSourceApplication(
+                                sourceApplicationId
+                        );
         return ResponseEntity.ok(integrationMetadata);
     }
 

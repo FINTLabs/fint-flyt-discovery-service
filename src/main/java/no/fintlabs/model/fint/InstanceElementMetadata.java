@@ -1,6 +1,5 @@
 package no.fintlabs.model.fint;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,13 +12,27 @@ import java.util.List;
 @Entity
 public class InstanceElementMetadata {
 
+    public enum Type {
+        STRING,
+        DATE,
+        DATETIME,
+        URL,
+        EMAIL,
+        PHONE,
+        BOOLEAN,
+        INTEGER,
+        DOUBLE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     @Setter(AccessLevel.NONE)
     private long id;
 
     private String key;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     private String displayName;
 

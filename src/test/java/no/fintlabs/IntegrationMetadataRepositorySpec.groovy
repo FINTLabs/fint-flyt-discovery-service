@@ -15,7 +15,7 @@ class IntegrationMetadataRepositorySpec extends Specification {
     IntegrationMetadataRepository integrationMetadataRepository
 
     private IntegrationMetadata createIntegrationMetadata(
-            String sourceApplicationId,
+            Long sourceApplicationId,
             String sourceApplicationIntegrationId,
             Integer version
     ) {
@@ -30,7 +30,7 @@ class IntegrationMetadataRepositorySpec extends Specification {
     def "Given no version, when findCurrentVersion is called, should return empty"() {
         when:
         Optional<Integer> nextVersionResult = integrationMetadataRepository.findCurrentVersion(
-                "1", "TEST-1"
+                1, "TEST-1"
         )
 
         then:
@@ -40,13 +40,13 @@ class IntegrationMetadataRepositorySpec extends Specification {
     def "Given existing version=1, when findCurrentVersion is called, should return 1"() {
         given:
         integrationMetadataRepository.save(
-                createIntegrationMetadata("1", "TEST-1", 1),
+                createIntegrationMetadata(1, "TEST-1", 1),
 
         )
 
         when:
         Optional<Integer> nextVersionResult = integrationMetadataRepository.findCurrentVersion(
-                "1", "TEST-1"
+                1, "TEST-1"
         )
 
         then:
@@ -57,7 +57,7 @@ class IntegrationMetadataRepositorySpec extends Specification {
     def "Given no version, when findNextVersion is called, should return 1"() {
         when:
         int nextVersionResult = integrationMetadataRepository.findNextVersion(
-                "1", "TEST-1"
+                1, "TEST-1"
         )
 
         then:
@@ -67,12 +67,12 @@ class IntegrationMetadataRepositorySpec extends Specification {
     def "Given existing version=1, when findNextVersion is called, should return 2"() {
         given:
         integrationMetadataRepository.save(
-                createIntegrationMetadata("1", "TEST-1", 1),
+                createIntegrationMetadata(1, "TEST-1", 1),
         )
 
         when:
         int nextVersionResult = integrationMetadataRepository.findNextVersion(
-                "1", "TEST-1"
+                1, "TEST-1"
         )
 
         then:
@@ -82,12 +82,12 @@ class IntegrationMetadataRepositorySpec extends Specification {
     def "Given no entities for sourceApplication, when findAllWithLatestVersionsForSourceApplication is called, should return empty collection"() {
         given:
         integrationMetadataRepository.save(
-                createIntegrationMetadata("2", "TEST-1", 1),
+                createIntegrationMetadata(2, "TEST-1", 1),
 
         )
 
         when:
-        Collection<IntegrationMetadata> result = integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication("1")
+        Collection<IntegrationMetadata> result = integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(1)
 
         then:
         result.isEmpty()
@@ -96,15 +96,15 @@ class IntegrationMetadataRepositorySpec extends Specification {
     def "Given entities for source application, when findAllWithLatestVersionsForSourceApplication is called, should return entities of latest version related to the source application"() {
         given:
         integrationMetadataRepository.saveAll(List.of(
-                createIntegrationMetadata("1", "TEST-1", 1),
-                createIntegrationMetadata("1", "TEST-1", 3),
-                createIntegrationMetadata("1", "TEST-1", 2),
-                createIntegrationMetadata("1", "TEST-2", 1),
-                createIntegrationMetadata("2", "TEST-1", 1),
+                createIntegrationMetadata(1, "TEST-1", 1),
+                createIntegrationMetadata(1, "TEST-1", 3),
+                createIntegrationMetadata(1, "TEST-1", 2),
+                createIntegrationMetadata(1, "TEST-2", 1),
+                createIntegrationMetadata(2, "TEST-1", 1),
         ))
 
         when:
-        Collection<IntegrationMetadata> result = integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication("1")
+        Collection<IntegrationMetadata> result = integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(1)
 
         then:
         result.size() == 2

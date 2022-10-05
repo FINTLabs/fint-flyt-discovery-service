@@ -1,5 +1,6 @@
 package no.fintlabs;
 
+import no.fintlabs.kafka.event.EventConsumerConfiguration;
 import no.fintlabs.kafka.event.EventConsumerFactoryService;
 import no.fintlabs.kafka.event.topic.EventTopicNameParameters;
 import no.fintlabs.model.fint.IntegrationMetadata;
@@ -19,8 +20,11 @@ public class IntegrationMetadataEventConsumerConfiguration {
         return eventConsumerFactoryService.createFactory(
                 IntegrationMetadata.class,
                 consumerRecord -> integrationMetadataService.saveIntegrationMetadata(consumerRecord.value()),
-                new CommonLoggingErrorHandler(),
-                false
+                EventConsumerConfiguration
+                        .builder()
+                        .errorHandler(new CommonLoggingErrorHandler())
+                        .seekingOffsetResetOnAssignment(false)
+                        .build()
         ).createContainer(
                 EventTopicNameParameters.builder()
                         .eventName("integration-metadata-received")

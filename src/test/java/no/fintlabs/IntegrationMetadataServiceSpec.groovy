@@ -17,7 +17,7 @@ class IntegrationMetadataServiceSpec extends Specification {
         given:
         IntegrationMetadata newIntegrationMetadata = IntegrationMetadata
                 .builder()
-                .sourceApplicationId("1")
+                .sourceApplicationId(1)
                 .sourceApplicationIntegrationId("TEST-1")
                 .build()
 
@@ -25,9 +25,9 @@ class IntegrationMetadataServiceSpec extends Specification {
         integrationMetadataService.saveIntegrationMetadata(newIntegrationMetadata)
 
         then:
-        1 * integrationMetadataRepository.findNextVersion("1", "TEST-1") >> 2
+        1 * integrationMetadataRepository.findNextVersion(1, "TEST-1") >> 2
         1 * integrationMetadataRepository.save(newIntegrationMetadata) >> { IntegrationMetadata integrationMetadata ->
-            assert integrationMetadata.getSourceApplicationId() == "1"
+            assert integrationMetadata.getSourceApplicationId() == 1
             assert integrationMetadata.getSourceApplicationIntegrationId() == "TEST-1"
             assert integrationMetadata.getVersion() == 2
         }
@@ -39,31 +39,31 @@ class IntegrationMetadataServiceSpec extends Specification {
         IntegrationMetadata integrationMetadata1 =
                 IntegrationMetadata
                         .builder()
-                        .sourceApplicationId("1")
+                        .sourceApplicationId(1)
                         .sourceApplicationIntegrationId("TEST-1")
                         .version(1)
                         .build()
         IntegrationMetadata integrationMetadata2 =
                 IntegrationMetadata
                         .builder()
-                        .sourceApplicationId("1")
+                        .sourceApplicationId(1)
                         .sourceApplicationIntegrationId("TEST-2")
                         .version(4)
                         .build()
         IntegrationMetadata integrationMetadata3 =
                 IntegrationMetadata
                         .builder()
-                        .sourceApplicationId("1")
+                        .sourceApplicationId(1)
                         .sourceApplicationIntegrationId("TEST-3")
                         .version(2)
                         .build()
 
         when:
         Collection<IntegrationMetadata> integrationMetadata = integrationMetadataService
-                .findLatestVersionForSourceApplication("1")
+                .findLatestVersionForSourceApplication(1)
 
         then:
-        1 * integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication("1") >> List.of(
+        1 * integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(1) >> List.of(
                 integrationMetadata1,
                 integrationMetadata2,
                 integrationMetadata3
