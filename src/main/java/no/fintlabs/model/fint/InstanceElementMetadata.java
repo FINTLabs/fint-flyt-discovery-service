@@ -1,5 +1,6 @@
 package no.fintlabs.model.fint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class InstanceElementMetadata {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Setter(AccessLevel.NONE)
     private long id;
 

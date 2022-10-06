@@ -1,6 +1,7 @@
 package no.fintlabs.model.fint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,7 +38,7 @@ public class IntegrationMetadata {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "integration_metadata_id")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<InstanceElementMetadata> instanceElementMetadata;
 
 }
