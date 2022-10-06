@@ -33,10 +33,11 @@ public class IntegrationMetadata {
 
     private String integrationDisplayName;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "integration_metadata_id")
-    private List<InstanceElementMetadata> instanceElementMetadata;
+    private Long version;
 
-    private Integer version;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "integration_metadata_id")
+    @JsonIgnore
+    private List<InstanceElementMetadata> instanceElementMetadata;
 
 }

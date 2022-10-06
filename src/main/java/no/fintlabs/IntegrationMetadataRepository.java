@@ -6,28 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface IntegrationMetadataRepository extends JpaRepository<IntegrationMetadata, Long> {
-
-    default int findNextVersion(
-            Long sourceApplicationId,
-            String sourceApplicationIntegrationId
-    ) {
-        return findCurrentVersion(sourceApplicationId, sourceApplicationIntegrationId)
-                .map(v -> v + 1)
-                .orElse(1);
-    }
-
-    @Query(value = "SELECT MAX(im.version)" +
-            " FROM IntegrationMetadata im" +
-            " WHERE im.sourceApplicationId = :sourceApplicationId" +
-            " AND im.sourceApplicationIntegrationId LIKE :sourceApplicationIntegrationId"
-    )
-    Optional<Integer> findCurrentVersion(
-            @Param(value = "sourceApplicationId") Long sourceApplicationId,
-            @Param(value = "sourceApplicationIntegrationId") String sourceApplicationIntegrationId
-    );
 
     @Query(value = "SELECT im" +
             " FROM IntegrationMetadata im" +
@@ -43,9 +23,19 @@ public interface IntegrationMetadataRepository extends JpaRepository<Integration
             @Param(value = "sourceApplicationId") Long sourceApplicationId
     );
 
+    Collection<IntegrationMetadata> findAllBySourceApplicationId(
+            Long sourceApplicationId
+    );
+
     Collection<IntegrationMetadata> findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
             Long sourceApplicationId,
             String sourceApplicationIntegrationId
+    );
+
+    boolean existsBySourceApplicationIdAndAndSourceApplicationIntegrationIdAndVersion(
+            Long sourceApplicationId,
+            String sourceApplicationIntegrationId,
+            Long version
     );
 
 }

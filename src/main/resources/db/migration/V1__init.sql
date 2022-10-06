@@ -15,7 +15,7 @@ create table integration_metadata
     source_application_id              int8,
     source_application_integration_id  varchar(255),
     source_application_integration_uri varchar(255),
-    version                            int4,
+    version                            int8,
     primary key (id)
 );
 alter table integration_metadata

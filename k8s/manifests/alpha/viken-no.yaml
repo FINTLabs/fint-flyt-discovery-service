@@ -43,7 +43,7 @@ spec:
     - host: "viken-no-skjema.vigoiks.no"
       http:
         paths:
-          - path: /api/intern/integrasjon/metadata
+          - path: /api/intern/metadata
             pathType: Prefix
             backend:
               service:

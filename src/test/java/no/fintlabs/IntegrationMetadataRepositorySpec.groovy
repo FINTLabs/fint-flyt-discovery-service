@@ -27,58 +27,6 @@ class IntegrationMetadataRepositorySpec extends Specification {
                 .build()
     }
 
-    def "Given no version, when findCurrentVersion is called, should return empty"() {
-        when:
-        Optional<Integer> nextVersionResult = integrationMetadataRepository.findCurrentVersion(
-                1, "TEST-1"
-        )
-
-        then:
-        nextVersionResult.isEmpty()
-    }
-
-    def "Given existing version=1, when findCurrentVersion is called, should return 1"() {
-        given:
-        integrationMetadataRepository.save(
-                createIntegrationMetadata(1, "TEST-1", 1),
-
-        )
-
-        when:
-        Optional<Integer> nextVersionResult = integrationMetadataRepository.findCurrentVersion(
-                1, "TEST-1"
-        )
-
-        then:
-        nextVersionResult.isPresent()
-        nextVersionResult.get() == 1
-    }
-
-    def "Given no version, when findNextVersion is called, should return 1"() {
-        when:
-        int nextVersionResult = integrationMetadataRepository.findNextVersion(
-                1, "TEST-1"
-        )
-
-        then:
-        nextVersionResult == 1
-    }
-
-    def "Given existing version=1, when findNextVersion is called, should return 2"() {
-        given:
-        integrationMetadataRepository.save(
-                createIntegrationMetadata(1, "TEST-1", 1),
-        )
-
-        when:
-        int nextVersionResult = integrationMetadataRepository.findNextVersion(
-                1, "TEST-1"
-        )
-
-        then:
-        nextVersionResult == 2
-    }
-
     def "Given no entities for sourceApplication, when findAllWithLatestVersionsForSourceApplication is called, should return empty collection"() {
         given:
         integrationMetadataRepository.save(

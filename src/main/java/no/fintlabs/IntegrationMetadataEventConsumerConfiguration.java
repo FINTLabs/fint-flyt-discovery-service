@@ -1,5 +1,6 @@
 package no.fintlabs;
 
+import lombok.extern.slf4j.Slf4j;
 import no.fintlabs.kafka.event.EventConsumerConfiguration;
 import no.fintlabs.kafka.event.EventConsumerFactoryService;
 import no.fintlabs.kafka.event.topic.EventTopicNameParameters;
@@ -9,17 +10,35 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.listener.CommonLoggingErrorHandler;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
+@Slf4j
 @Configuration
 public class IntegrationMetadataEventConsumerConfiguration {
 
     @Bean
     public ConcurrentMessageListenerContainer<String, IntegrationMetadata> integrationMetadataEventConsumer(
             EventConsumerFactoryService eventConsumerFactoryService,
-            IntegrationMetadataService integrationMetadataService
+            IntegrationMetadataRepository integrationMetadataRepository
     ) {
         return eventConsumerFactoryService.createFactory(
                 IntegrationMetadata.class,
-                consumerRecord -> integrationMetadataService.saveIntegrationMetadata(consumerRecord.value()),
+                consumerRecord -> {
+                    IntegrationMetadata integrationMetadata = consumerRecord.value();
+                    if (!integrationMetadataRepository.existsBySourceApplicationIdAndAndSourceApplicationIntegrationIdAndVersion(
+                            integrationMetadata.getSourceApplicationId(),
+                            integrationMetadata.getSourceApplicationIntegrationId(),
+                            integrationMetadata.getVersion()
+                    )) {
+                        integrationMetadataRepository.save(integrationMetadata);
+                    } else {
+                        log.warn("Ignored metadata with sourceApplicationId=" +
+                                integrationMetadata.getSourceApplicationId() +
+                                ", sourceApplicationIntegrationId=" +
+                                integrationMetadata.getSourceApplicationIntegrationId() +
+                                " and version=" +
+                                integrationMetadata.getVersion() +
+                                " because it already exists");
+                    }
+                },
                 EventConsumerConfiguration
                         .builder()
                         .errorHandler(new CommonLoggingErrorHandler())
