@@ -22,7 +22,7 @@ public class IntegrationMetadata {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Setter(AccessLevel.NONE)
     private long id;
 
