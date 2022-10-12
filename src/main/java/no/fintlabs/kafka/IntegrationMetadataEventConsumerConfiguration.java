@@ -1,6 +1,7 @@
-package no.fintlabs;
+package no.fintlabs.kafka;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fintlabs.IntegrationMetadataRepository;
 import no.fintlabs.kafka.event.EventConsumerConfiguration;
 import no.fintlabs.kafka.event.EventConsumerFactoryService;
 import no.fintlabs.kafka.event.topic.EventTopicNameParameters;
