@@ -1,4 +1,4 @@
-package no.fintlabs;
+package no.fintlabs.validation;
 
 import org.springframework.stereotype.Service;
 

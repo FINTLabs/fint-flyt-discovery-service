@@ -4,6 +4,7 @@ package no.fintlabs;
 import no.fintlabs.model.InstanceElementMetadata;
 import no.fintlabs.model.IntegrationMetadata;
 import no.fintlabs.model.web.IntegrationMetadataPost;
+import no.fintlabs.validation.ValidationErrorsFormattingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -100,6 +101,7 @@ public class IntegrationMetadataController {
         )) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Version already exists");
         }
+
         integrationMetadataRepository.save(integrationMetadata);
         return ResponseEntity.ok().build();
     }
