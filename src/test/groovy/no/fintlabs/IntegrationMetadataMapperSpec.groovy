@@ -8,13 +8,13 @@ import spock.lang.Specification
 
 class IntegrationMetadataMapperSpec extends Specification {
 
-    IntegrationMetadataMapper integrationMetadataMapper;
-    IntegrationMetadataPost integrationMetadataPost;
-    IntegrationMetadata expectedIntegrationMetadata;
+    IntegrationMetadataMapper integrationMetadataMapper
+    IntegrationMetadataPost integrationMetadataPost
+    IntegrationMetadata expectedIntegrationMetadata
 
     def setup() {
 
-        integrationMetadataMapper = new IntegrationMetadataMapper();
+        integrationMetadataMapper = new IntegrationMetadataMapper()
 
         integrationMetadataPost = IntegrationMetadataPost
                 .builder()
@@ -66,9 +66,9 @@ class IntegrationMetadataMapperSpec extends Specification {
 
     def 'Should map to integration Metadata'() {
         when:
-        IntegrationMetadata integrationMetadata = integrationMetadataMapper.toIntegrationMetadata(integrationMetadataPost);
+        IntegrationMetadata integrationMetadata = integrationMetadataMapper.toIntegrationMetadata(integrationMetadataPost)
 
         then:
-        integrationMetadata == expectedIntegrationMetadata;
+        integrationMetadata == expectedIntegrationMetadata
     }
 }
