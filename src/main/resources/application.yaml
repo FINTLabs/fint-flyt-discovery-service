@@ -2,6 +2,8 @@ fint:
   application-id: fint-flyt-discovery-service
 server:
   max-http-header-size: 40KB
+  error:
+    include-message: always
 spring:
   profiles:
     include:

@@ -1,6 +1,6 @@
 package no.fintlabs
 
-import no.fintlabs.model.fint.IntegrationMetadata
+import no.fintlabs.model.IntegrationMetadata
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.annotation.DirtiesContext
@@ -24,6 +24,7 @@ class IntegrationMetadataRepositorySpec extends Specification {
                 .sourceApplicationId(sourceApplicationId)
                 .sourceApplicationIntegrationId(sourceApplicationIntegrationId)
                 .version(version)
+                .integrationDisplayName("displayName")
                 .build()
     }
 

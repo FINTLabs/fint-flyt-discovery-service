@@ -1,4 +1,4 @@
-package no.fintlabs.model.fint;
+package no.fintlabs.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -25,14 +25,18 @@ public class IntegrationMetadata {
     @Setter(AccessLevel.NONE)
     private long id;
 
+    @Column(nullable = false)
     private Long sourceApplicationId;
 
+    @Column(nullable = false)
     private String sourceApplicationIntegrationId;
 
     private String sourceApplicationIntegrationUri;
 
+    @Column(nullable = false)
     private String integrationDisplayName;
 
+    @Column(nullable = false)
     private Long version;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

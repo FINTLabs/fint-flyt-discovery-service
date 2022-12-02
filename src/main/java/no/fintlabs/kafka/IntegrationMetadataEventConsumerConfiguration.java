@@ -5,7 +5,7 @@ import no.fintlabs.IntegrationMetadataRepository;
 import no.fintlabs.kafka.event.EventConsumerConfiguration;
 import no.fintlabs.kafka.event.EventConsumerFactoryService;
 import no.fintlabs.kafka.event.topic.EventTopicNameParameters;
-import no.fintlabs.model.fint.IntegrationMetadata;
+import no.fintlabs.model.IntegrationMetadata;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.listener.CommonLoggingErrorHandler;

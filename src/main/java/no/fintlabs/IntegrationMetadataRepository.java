@@ -1,6 +1,6 @@
 package no.fintlabs;
 
-import no.fintlabs.model.fint.IntegrationMetadata;
+import no.fintlabs.model.IntegrationMetadata;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
