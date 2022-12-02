@@ -1,5 +1,6 @@
 package no.fintlabs.model.web;
 
+import lombok.Builder;
 import lombok.Data;
 import no.fintlabs.validation.UniqueKeys;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@Builder
 public class IntegrationMetadataPost {
 
     @NotNull
