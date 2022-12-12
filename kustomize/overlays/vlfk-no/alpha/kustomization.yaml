@@ -17,7 +17,7 @@ patches:
   - patch: |-
       - op: replace
         path: "/spec/routes/0/match"
-        value: "Host(`flyt.vigoiks.no`) && PathPrefix(`/api/intern/metadata`)"
+        value: "Host(`flyt.vigoiks.no`) && PathPrefix(`/alpha/api/intern/metadata`)"
     target:
       kind: IngressRoute
       name: fint-flyt-discovery-service
