@@ -38,6 +38,8 @@ public class InstanceElementMetadata {
 
     private String displayName;
 
+    private boolean disabled;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "parent_instance_element_metadata_id")
     private List<InstanceElementMetadata> children;

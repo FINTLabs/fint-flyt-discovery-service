@@ -1,6 +1,7 @@
 create table instance_element_metadata
 (
     id                                  bigserial not null,
+    disabled                            boolean   not null,
     display_name                        varchar(255),
     key                                 varchar(255),
     type                                varchar(255),
@@ -10,12 +11,12 @@ create table instance_element_metadata
 );
 create table integration_metadata
 (
-    id                                 bigserial not null,
-    integration_display_name           varchar(255),
-    source_application_id              int8,
-    source_application_integration_id  varchar(255),
+    id                                 bigserial    not null,
+    integration_display_name           varchar(255) not null,
+    source_application_id              int8         not null,
+    source_application_integration_id  varchar(255) not null,
     source_application_integration_uri varchar(255),
-    version                            int8,
+    version                            int8         not null,
     primary key (id)
 );
 alter table integration_metadata
