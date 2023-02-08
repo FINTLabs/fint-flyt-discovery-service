@@ -22,7 +22,8 @@ public class InstanceElementMetadata {
         PHONE,
         BOOLEAN,
         INTEGER,
-        DOUBLE
+        DOUBLE,
+        FILE
     }
 
     @Id
