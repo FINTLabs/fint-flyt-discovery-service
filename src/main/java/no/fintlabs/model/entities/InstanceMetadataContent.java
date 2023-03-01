@@ -21,13 +21,13 @@ public class InstanceMetadataContent {
     @Setter(AccessLevel.NONE)
     private long id;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<@Valid @NotNull InstanceValueMetadata> instanceValueMetadata;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<@Valid @NotNull InstanceObjectCollectionMetadata> instanceObjectCollectionMetadata;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<@Valid @NotNull InstanceMetadataCategory> categories;
 
 }

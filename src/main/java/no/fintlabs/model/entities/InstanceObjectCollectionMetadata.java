@@ -20,7 +20,7 @@ public class InstanceObjectCollectionMetadata {
 
     private String displayName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private InstanceMetadataContent objectMetadata;
 
     private String key;

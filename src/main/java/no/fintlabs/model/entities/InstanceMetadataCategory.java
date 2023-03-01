@@ -21,7 +21,7 @@ public class InstanceMetadataCategory {
 
     private String displayName;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private InstanceMetadataContent content;
 
 }
