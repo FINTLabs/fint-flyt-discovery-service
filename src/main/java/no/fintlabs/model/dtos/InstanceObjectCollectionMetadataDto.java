@@ -23,6 +23,6 @@ public class InstanceObjectCollectionMetadataDto {
     private final InstanceMetadataContentDto objectMetadata;
 
     @NotNull
-    private String key;
+    private final String key;
 
 }
