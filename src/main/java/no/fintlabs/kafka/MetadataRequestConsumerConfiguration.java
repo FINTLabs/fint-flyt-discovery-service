@@ -1,25 +1,23 @@
 package no.fintlabs.kafka;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import no.fintlabs.IntegrationMetadataRepository;
+import no.fintlabs.IntegrationMetadataService;
 import no.fintlabs.kafka.common.topic.TopicCleanupPolicyParameters;
 import no.fintlabs.kafka.requestreply.ReplyProducerRecord;
 import no.fintlabs.kafka.requestreply.RequestConsumerFactoryService;
 import no.fintlabs.kafka.requestreply.topic.RequestTopicNameParameters;
 import no.fintlabs.kafka.requestreply.topic.RequestTopicService;
-import no.fintlabs.model.InstanceElementMetadata;
-import no.fintlabs.model.IntegrationMetadata;
+import no.fintlabs.model.dtos.InstanceMetadataContentDto;
+import no.fintlabs.model.entities.IntegrationMetadata;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.listener.CommonLoggingErrorHandler;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
-import java.util.Collection;
-
 @Configuration
 public class MetadataRequestConsumerConfiguration {
+
 
     @Bean
     ConcurrentMessageListenerContainer<String, Long>
@@ -49,14 +47,14 @@ public class MetadataRequestConsumerConfiguration {
 
     @Bean
     ConcurrentMessageListenerContainer<String, Long>
-    instanceElementMetadataByMetadataIdRequestConsumer(
+    instanceMetadataByMetadataIdRequestConsumer(
             RequestTopicService requestTopicService,
             RequestConsumerFactoryService requestConsumerFactoryService,
-            IntegrationMetadataRepository integrationMetadataRepository
+            IntegrationMetadataService integrationMetadataService
     ) {
         RequestTopicNameParameters requestTopicNameParameters = RequestTopicNameParameters
                 .builder()
-                .resource("instance-element-metadata")
+                .resource("instance-metadata")
                 .parameterName("metadata-id")
                 .build();
         requestTopicService
@@ -64,25 +62,17 @@ public class MetadataRequestConsumerConfiguration {
 
         return requestConsumerFactoryService.createFactory(
                 Long.class,
-                InstanceElementMetadataWrapper.class,
+                InstanceMetadataContentDto.class,
                 (ConsumerRecord<String, Long> consumerRecord) -> ReplyProducerRecord
-                        .<InstanceElementMetadataWrapper>builder()
+                        .<InstanceMetadataContentDto>builder()
                         .value(
-                                integrationMetadataRepository
-                                        .findById(consumerRecord.value())
-                                        .map(IntegrationMetadata::getInstanceElementMetadata)
-                                        .map(InstanceElementMetadataWrapper::new)
+                                integrationMetadataService
+                                        .getInstanceMetadataById(consumerRecord.value())
                                         .orElse(null)
                         )
                         .build(),
                 new CommonLoggingErrorHandler()
         ).createContainer(requestTopicNameParameters);
-    }
-
-    @Data
-    @AllArgsConstructor
-    private static class InstanceElementMetadataWrapper {
-        private Collection<InstanceElementMetadata> instanceElementMetadata;
     }
 
 }

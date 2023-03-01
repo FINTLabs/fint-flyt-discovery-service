@@ -1,6 +1,6 @@
 package no.fintlabs
 
-import no.fintlabs.model.IntegrationMetadata
+import no.fintlabs.model.entities.IntegrationMetadata
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.annotation.DirtiesContext

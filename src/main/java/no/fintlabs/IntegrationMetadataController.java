@@ -1,9 +1,9 @@
 package no.fintlabs;
 
 
-import no.fintlabs.model.InstanceElementMetadata;
-import no.fintlabs.model.IntegrationMetadata;
-import no.fintlabs.model.web.IntegrationMetadataPost;
+import no.fintlabs.model.dtos.InstanceMetadataContentDto;
+import no.fintlabs.model.dtos.IntegrationMetadataDto;
+import no.fintlabs.model.entities.IntegrationMetadata;
 import no.fintlabs.validation.ValidationErrorsFormattingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +22,17 @@ import static no.fintlabs.resourceserver.UrlPaths.INTERNAL_API;
 @RestController
 public class IntegrationMetadataController {
 
-    private final IntegrationMetadataRepository integrationMetadataRepository;
-    private final IntegrationMetadataMapper integrationMetadataMapper;
+    private final IntegrationMetadataService integrationMetadataService;
 
     private final Validator validator;
     private final ValidationErrorsFormattingService validationErrorsFormattingService;
 
     public IntegrationMetadataController(
-            IntegrationMetadataRepository integrationMetadataRepository,
-            IntegrationMetadataMapper integrationMetadataMapper,
+            IntegrationMetadataService integrationMetadataService,
             Validator validator,
             ValidationErrorsFormattingService validationErrorsFormattingService
     ) {
-        this.integrationMetadataRepository = integrationMetadataRepository;
-        this.integrationMetadataMapper = integrationMetadataMapper;
+        this.integrationMetadataService = integrationMetadataService;
         this.validator = validator;
         this.validationErrorsFormattingService = validationErrorsFormattingService;
     }
@@ -46,63 +43,54 @@ public class IntegrationMetadataController {
     }
 
     @GetMapping(params = {"kildeapplikasjonId"})
-    public ResponseEntity<Collection<IntegrationMetadata>> getIntegrationMetadataForSourceApplication(
+    public ResponseEntity<Collection<IntegrationMetadataDto>> getIntegrationMetadataForSourceApplication(
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "bareSisteVersjoner") Optional<Boolean> onlyLatestVersions
     ) {
-        Collection<IntegrationMetadata> integrationMetadata =
-                onlyLatestVersions.orElse(false)
-                        ? integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId)
-                        : integrationMetadataRepository.findAllBySourceApplicationId(sourceApplicationId);
+        Collection<IntegrationMetadataDto> integrationMetadata =
+                integrationMetadataService.getIntegrationMetadataForSourceApplication(
+                        sourceApplicationId,
+                        onlyLatestVersions.orElse(false)
+                );
         return ResponseEntity.ok(integrationMetadata);
     }
 
     @GetMapping(params = {"kildeapplikasjonId", "kildeapplikasjonIntegrasjonId"})
-    public ResponseEntity<Collection<IntegrationMetadata>> getIntegrationMetadataForIntegration(
+    public ResponseEntity<Collection<IntegrationMetadataDto>> getIntegrationMetadataForIntegration(
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "kildeapplikasjonIntegrasjonId") String sourceApplicationIntegrationId
     ) {
-        Collection<IntegrationMetadata> integrationMetadata = integrationMetadataRepository
-                .findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
+        Collection<IntegrationMetadataDto> integrationMetadata =
+                integrationMetadataService.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
                         sourceApplicationId,
                         sourceApplicationIntegrationId
                 );
         return ResponseEntity.ok(integrationMetadata);
     }
 
-    @GetMapping("{metadataId}/instans-element-metadata")
-    public ResponseEntity<Collection<InstanceElementMetadata>> getInstanceElementMetadataForIntegrationMetadataWithId(
+    @GetMapping("{metadataId}/instans-metadata")
+    public ResponseEntity<InstanceMetadataContentDto> getInstanceElementMetadataForIntegrationMetadataWithId(
             @PathVariable Long metadataId
     ) {
-        Collection<InstanceElementMetadata> instanceElementMetadata = integrationMetadataRepository
-                .findById(metadataId)
-                .map(IntegrationMetadata::getInstanceElementMetadata)
+        InstanceMetadataContentDto instanceMetadataContent = integrationMetadataService
+                .getInstanceMetadataById(metadataId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return ResponseEntity.ok(instanceElementMetadata);
+        return ResponseEntity.ok(instanceMetadataContent);
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody IntegrationMetadataPost integrationMetadataPost) {
-        Set<ConstraintViolation<IntegrationMetadataPost>> constraintViolations = validator.validate(integrationMetadataPost);
+    public ResponseEntity<?> post(@RequestBody IntegrationMetadataDto integrationMetadataDto) {
+        Set<ConstraintViolation<IntegrationMetadataDto>> constraintViolations = validator.validate(integrationMetadataDto);
         if (!constraintViolations.isEmpty()) {
             throw new ResponseStatusException(
                     HttpStatus.UNPROCESSABLE_ENTITY,
                     validationErrorsFormattingService.format(constraintViolations)
             );
         }
-
-        IntegrationMetadata integrationMetadata =
-                integrationMetadataMapper.toIntegrationMetadata(integrationMetadataPost);
-
-        if (integrationMetadataRepository.existsBySourceApplicationIdAndAndSourceApplicationIntegrationIdAndVersion(
-                integrationMetadata.getSourceApplicationId(),
-                integrationMetadata.getSourceApplicationIntegrationId(),
-                integrationMetadata.getVersion()
-        )) {
+        if (integrationMetadataService.versionExists(integrationMetadataDto)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Version already exists");
         }
-
-        integrationMetadataRepository.save(integrationMetadata);
+        integrationMetadataService.save(integrationMetadataDto);
         return ResponseEntity.ok().build();
     }
 
