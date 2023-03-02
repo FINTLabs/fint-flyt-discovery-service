@@ -30,6 +30,7 @@ public class IntegrationMetadataMappingService {
     public IntegrationMetadataDto toDto(IntegrationMetadata integrationMetadata) {
         return IntegrationMetadataDto
                 .builder()
+                .id(integrationMetadata.getId())
                 .sourceApplicationId(integrationMetadata.getSourceApplicationId())
                 .sourceApplicationIntegrationId(integrationMetadata.getSourceApplicationIntegrationId())
                 .sourceApplicationIntegrationUri(integrationMetadata.getSourceApplicationIntegrationUri())
