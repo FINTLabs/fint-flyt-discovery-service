@@ -2,10 +2,13 @@ package no.fintlabs.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@EqualsAndHashCode
+@Jacksonized
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
