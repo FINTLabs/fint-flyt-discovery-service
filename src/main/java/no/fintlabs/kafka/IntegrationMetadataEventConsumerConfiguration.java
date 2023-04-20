@@ -5,6 +5,7 @@ import no.fintlabs.IntegrationMetadataRepository;
 import no.fintlabs.kafka.event.EventConsumerConfiguration;
 import no.fintlabs.kafka.event.EventConsumerFactoryService;
 import no.fintlabs.kafka.event.topic.EventTopicNameParameters;
+import no.fintlabs.kafka.event.topic.EventTopicService;
 import no.fintlabs.model.entities.IntegrationMetadata;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +19,14 @@ public class IntegrationMetadataEventConsumerConfiguration {
     @Bean
     public ConcurrentMessageListenerContainer<String, IntegrationMetadata> integrationMetadataEventConsumer(
             EventConsumerFactoryService eventConsumerFactoryService,
-            IntegrationMetadataRepository integrationMetadataRepository
+            IntegrationMetadataRepository integrationMetadataRepository,
+            EventTopicService eventTopicService
     ) {
+        EventTopicNameParameters eventTopicNameParameters = EventTopicNameParameters.builder()
+                .eventName("integration-metadata-received")
+                .build();
+        eventTopicService.ensureTopic(eventTopicNameParameters, 15778463000L);
+
         return eventConsumerFactoryService.createFactory(
                 IntegrationMetadata.class,
                 consumerRecord -> {
@@ -46,9 +53,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
                         .seekingOffsetResetOnAssignment(false)
                         .build()
         ).createContainer(
-                EventTopicNameParameters.builder()
-                        .eventName("integration-metadata-received")
-                        .build()
+                eventTopicNameParameters
         );
 
     }
