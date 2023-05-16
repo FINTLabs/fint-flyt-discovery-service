@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: fint-flyt-discovery-service
-data:
-  TZ: 'Europe/Oslo'
-  JAVA_TOOL_OPTIONS: '-XX:+ExitOnOutOfMemoryError -Xmx1840M'
-  logging.level.no.fintlabs.arkiv: 'info'
-  fint.flyt.resource-server.security.api.internal.enabled: 'true'
