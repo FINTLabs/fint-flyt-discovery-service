@@ -2,13 +2,17 @@ package no.fintlabs.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
