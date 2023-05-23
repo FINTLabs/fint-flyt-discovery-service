@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Getter
+@Setter
 @EqualsAndHashCode
 @Jacksonized
 @NoArgsConstructor

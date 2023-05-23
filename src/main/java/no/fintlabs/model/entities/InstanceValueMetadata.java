@@ -7,6 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 import javax.persistence.*;
 
 @Getter
+@Setter
 @EqualsAndHashCode
 @Jacksonized
 @NoArgsConstructor
