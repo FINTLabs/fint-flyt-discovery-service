@@ -29,7 +29,7 @@ create table instance_object_collection_metadata
 (
     id                 bigserial not null,
     display_name       varchar(255),
-    key                varchar(255),
+    "key"              varchar(255),
     object_metadata_id int8,
     primary key (id)
 );
@@ -37,7 +37,7 @@ create table instance_value_metadata
 (
     id           bigserial not null,
     display_name varchar(255),
-    key          varchar(255),
+    "key"        varchar(255),
     type         varchar(255),
     primary key (id)
 );

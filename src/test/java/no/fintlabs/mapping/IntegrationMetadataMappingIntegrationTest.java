@@ -1,31 +1,38 @@
-package no.fintlabs.mapping
+package no.fintlabs.mapping;
 
-import no.fintlabs.model.dtos.*
-import no.fintlabs.model.entities.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import no.fintlabs.model.dtos.*;
+import no.fintlabs.model.entities.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@ContextConfiguration(classes = [
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest(classes = {
         IntegrationMetadataMappingService.class,
         InstanceMetadataContentMappingService.class,
         InstanceValueMetadataMappingService.class,
         InstanceObjectCollectionMetadataMappingService.class,
         InstanceMetadataCategoryMappingService.class
-])
-class IntegrationMetadataMappingIntegrationSpec extends Specification {
+})
+public class IntegrationMetadataMappingIntegrationTest {
 
     @Autowired
-    IntegrationMetadataMappingService integrationMetadataMappingService
-    IntegrationMetadataDto integrationMetadataDto
-    IntegrationMetadata expectedIntegrationMetadata
+    private IntegrationMetadataMappingService integrationMetadataMappingService;
 
-    def setup() {
+    private IntegrationMetadataDto integrationMetadataDto;
+    private IntegrationMetadata expectedIntegrationMetadata;
+
+    @BeforeEach
+    public void setup() {
         integrationMetadataDto = IntegrationMetadataDto
                 .builder()
-                .sourceApplicationId(1)
+                .sourceApplicationId(1L)
                 .sourceApplicationIntegrationId("Test-1")
-                .version(1)
+                .version(1L)
                 .integrationDisplayName("displayName")
                 .instanceMetadata(
                         InstanceMetadataContentDto
@@ -159,13 +166,13 @@ class IntegrationMetadataMappingIntegrationSpec extends Specification {
                                 ))
                                 .build()
                 )
-                .build()
+                .build();
 
         expectedIntegrationMetadata = IntegrationMetadata
                 .builder()
-                .sourceApplicationId(1)
+                .sourceApplicationId(1L)
                 .sourceApplicationIntegrationId("Test-1")
-                .version(1)
+                .version(1L)
                 .integrationDisplayName("displayName")
                 .instanceMetadata(
                         InstanceMetadataContent
@@ -308,15 +315,12 @@ class IntegrationMetadataMappingIntegrationSpec extends Specification {
                                 ))
                                 .build()
                 )
-                .build()
+                .build();
     }
 
-    def 'Should map to integration Metadata'() {
-        when:
-        IntegrationMetadata integrationMetadata = integrationMetadataMappingService.toEntity(integrationMetadataDto)
-
-        then:
-        integrationMetadata == expectedIntegrationMetadata
+    @Test
+    public void shouldMapToIntegrationMetadata() {
+        IntegrationMetadata integrationMetadata = integrationMetadataMappingService.toEntity(integrationMetadataDto);
+        assertEquals(expectedIntegrationMetadata, integrationMetadata);
     }
-
 }
