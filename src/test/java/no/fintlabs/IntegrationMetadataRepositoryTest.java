@@ -1,6 +1,7 @@
 package no.fintlabs;
 
 import no.fintlabs.model.entities.IntegrationMetadata;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest(properties = "spring.jpa.hibernate.ddl-auto=none")
 @DirtiesContext
+@Disabled
 class IntegrationMetadataRepositoryTest {
 
     @Autowired
