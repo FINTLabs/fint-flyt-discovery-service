@@ -18,7 +18,8 @@ on:
         default: 'warning'
         type: choice
         options:
-          - finlabs-no
+          - fintlabs-no
+          - innlandetfylke-no
           - viken-no
           - vlfk-no
           - trondelagfylke-no
