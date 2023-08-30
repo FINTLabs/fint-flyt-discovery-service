@@ -27,7 +27,7 @@ public class InstanceObjectCollectionMetadata {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private InstanceMetadataContent objectMetadata;
 
-//    @Column(name = "\"key\"")
+    @Column(name = "\"key\"")
     private String key;
 
 }

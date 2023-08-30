@@ -33,7 +33,7 @@ public class InstanceValueMetadata {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-//    @Column(name = "\"key\"")
+    @Column(name = "\"key\"")
     private String key;
 
 }
