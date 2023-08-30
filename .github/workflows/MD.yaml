@@ -18,6 +18,7 @@ on:
         default: 'warning'
         type: choice
         options:
+          - finlabs-no
           - viken-no
           - vlfk-no
           - trondelagfylke-no
