@@ -12,7 +12,6 @@ import no.fintlabs.model.entities.IntegrationMetadata;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.listener.CommonLoggingErrorHandler;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 
 @Configuration
@@ -34,14 +33,13 @@ public class MetadataRequestConsumerConfiguration {
         requestTopicService
                 .ensureTopic(requestTopicNameParameters, 0, TopicCleanupPolicyParameters.builder().build());
 
-        return requestConsumerFactoryService.createFactory(
+        return requestConsumerFactoryService.createRecordConsumerFactory(
                 Long.class,
                 IntegrationMetadata.class,
                 (ConsumerRecord<String, Long> consumerRecord) -> ReplyProducerRecord
                         .<IntegrationMetadata>builder()
                         .value(integrationMetadataRepository.findById(consumerRecord.value()).orElse(null))
-                        .build(),
-                new CommonLoggingErrorHandler()
+                        .build()
         ).createContainer(requestTopicNameParameters);
     }
 
@@ -60,7 +58,7 @@ public class MetadataRequestConsumerConfiguration {
         requestTopicService
                 .ensureTopic(requestTopicNameParameters, 0, TopicCleanupPolicyParameters.builder().build());
 
-        return requestConsumerFactoryService.createFactory(
+        return requestConsumerFactoryService.createRecordConsumerFactory(
                 Long.class,
                 InstanceMetadataContentDto.class,
                 (ConsumerRecord<String, Long> consumerRecord) -> ReplyProducerRecord
@@ -70,8 +68,7 @@ public class MetadataRequestConsumerConfiguration {
                                         .getInstanceMetadataById(consumerRecord.value())
                                         .orElse(null)
                         )
-                        .build(),
-                new CommonLoggingErrorHandler()
+                        .build()
         ).createContainer(requestTopicNameParameters);
     }
 

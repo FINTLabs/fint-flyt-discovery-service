@@ -9,8 +9,8 @@ import no.fintlabs.kafka.event.topic.EventTopicService;
 import no.fintlabs.model.entities.IntegrationMetadata;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.listener.CommonLoggingErrorHandler;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 
 @Slf4j
 @Configuration
@@ -27,7 +27,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
                 .build();
         eventTopicService.ensureTopic(eventTopicNameParameters, 15778463000L);
 
-        return eventConsumerFactoryService.createFactory(
+        return eventConsumerFactoryService.createRecordConsumerFactory(
                 IntegrationMetadata.class,
                 consumerRecord -> {
                     IntegrationMetadata integrationMetadata = consumerRecord.value();
@@ -49,7 +49,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
                 },
                 EventConsumerConfiguration
                         .builder()
-                        .errorHandler(new CommonLoggingErrorHandler())
+                        .errorHandler(new DefaultErrorHandler())
                         .seekingOffsetResetOnAssignment(false)
                         .build()
         ).createContainer(
