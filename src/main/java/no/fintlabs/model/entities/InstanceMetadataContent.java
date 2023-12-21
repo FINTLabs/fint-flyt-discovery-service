@@ -11,7 +11,6 @@ import java.util.Collection;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor

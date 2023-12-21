@@ -9,7 +9,6 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
