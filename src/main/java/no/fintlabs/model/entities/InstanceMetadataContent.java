@@ -8,10 +8,10 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Objects;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @Jacksonized
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,5 +33,19 @@ public class InstanceMetadataContent {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<@Valid @NotNull InstanceMetadataCategory> categories;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InstanceMetadataContent that = (InstanceMetadataContent) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 
 }
