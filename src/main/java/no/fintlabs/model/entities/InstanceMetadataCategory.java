@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -26,5 +27,18 @@ public class InstanceMetadataCategory {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private InstanceMetadataContent content;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InstanceMetadataCategory that = (InstanceMetadataCategory) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
 }
