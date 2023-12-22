@@ -1,31 +1,31 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: trondelagfylke-no
+namespace: ofk-no
 
 resources:
   - ../../../base
 
 commonLabels:
-  app.kubernetes.io/instance: fint-flyt-discovery-service_trondelagfylke_no
-  fintlabs.no/org-id: trondelagfylke.no
+  app.kubernetes.io/instance: fint-flyt-discovery-service_ofk_no
+  fintlabs.no/org-id: ofk.no
 
 patches:
   - patch: |-
       - op: replace
         path: "/spec/kafka/acls/0/topic"
-        value: "trondelagfylke-no.flyt.*"
+        value: "ofk-no.flyt.*"
       - op: replace
         path: "/spec/orgId"
-        value: "trondelagfylke.no"
+        value: "ofk.no"
       - op: replace
         path: "/spec/url/basePath"
-        value: "/alpha/trondelagfylke-no"
+        value: "/beta/ofk-no"
       - op: replace
         path: "/spec/ingress/basePath"
-        value: "/alpha/trondelagfylke-no/api/intern/metadata"
+        value: "/beta/ofk-no/api/intern/metadata"
       - op: replace
         path: "/spec/env/1/value"
-        value: "trondelagfylke.no, vigo.no"
+        value: "ofk.no, vigo.no"
 
     target:
       kind: Application
