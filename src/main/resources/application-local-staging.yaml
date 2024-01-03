@@ -9,7 +9,7 @@ fint:
             authorized-client-ids: 1
           internal:
             enabled: true
-            authorized-orgid-role-pairs:
+            authorized-org-id-role-pairs:
               vigo.no:
                 - https://role-catalog.vigoiks.no/vigo/flyt/developer
               vlfk.no:
