@@ -25,7 +25,7 @@ patches:
         value: "/beta/viken-no/api/intern/metadata"
       - op: replace
         path: "/spec/env/1/value"
-        value: "viken.no, vigo.no"
+        value: "{\"viken.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/user\"],\"vigo.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/developer\"]}"
 
     target:
       kind: Application
