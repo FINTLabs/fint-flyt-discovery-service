@@ -9,11 +9,8 @@ fint:
             authorized-client-ids: 1
           internal:
             enabled: true
-            authorized-org-id-role-pairs:
-              vigo.no:
-                - https://role-catalog.vigoiks.no/vigo/flyt/developer
-              vlfk.no:
-                - https://role-catalog.vigoiks.no/vigo/flyt/user
+            authorized-org-id-role-pairs-json: "{\"vlfk.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/user\"],\"vigo.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/developer\"]}"
+
   kafka:
     default-replicas: 1
 spring:
