@@ -25,7 +25,18 @@ patches:
         value: "/beta/vlfk-no/api/intern/metadata"
       - op: replace
         path: "/spec/env/1/value"
-        value: "vlfk.no, vigo.no"
+        value: |
+          {
+            "vlfk.no":["https://role-catalog.vigoiks.no/vigo/flyt/user"],
+            "vigo.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"],
+            "novari.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"]
+          }
+
+      - op: add
+        path: "/spec/env/-"
+        value:
+          name: "logging.level.no.fintlabs.resourceserver.security"
+          value: "DEBUG"
 
     target:
       kind: Application
