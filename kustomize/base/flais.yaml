@@ -37,8 +37,7 @@ spec:
     - name: fint.flyt.resource-server.security.api.internal.authorized-org-id-role-pairs-json
       value: |
         {
-          "vigo.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"],
-          "novari.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"]
+          "fintlabs.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"]
         }
     - name: fint.flyt.resource-server.security.api.internal.enabled
       value: "true"
