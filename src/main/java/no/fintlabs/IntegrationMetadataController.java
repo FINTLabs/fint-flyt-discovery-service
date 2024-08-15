@@ -54,11 +54,9 @@ public class IntegrationMetadataController {
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "bareSisteVersjoner") Optional<Boolean> onlyLatestVersions
     ) {
-        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
-                userPermissionsConsumerEnabled,
-                authentication,
-                sourceApplicationId
-        );
+        if (userPermissionsConsumerEnabled) {
+            UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
+        }
 
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getIntegrationMetadataForSourceApplication(
@@ -75,11 +73,9 @@ public class IntegrationMetadataController {
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "kildeapplikasjonIntegrasjonId") String sourceApplicationIntegrationId
     ) {
-        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
-                userPermissionsConsumerEnabled,
-                authentication,
-                sourceApplicationId
-        );
+        if (userPermissionsConsumerEnabled) {
+            UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
+        }
 
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
@@ -98,11 +94,9 @@ public class IntegrationMetadataController {
                 .getById(metadataId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
-                userPermissionsConsumerEnabled,
-                authentication,
-                integrationMetadataDto.getSourceApplicationId()
-        );
+        if (userPermissionsConsumerEnabled) {
+            UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
+        }
 
         return ResponseEntity.ok(integrationMetadataDto.getInstanceMetadata());
     }
@@ -112,11 +106,9 @@ public class IntegrationMetadataController {
             @AuthenticationPrincipal Authentication authentication,
             @RequestBody IntegrationMetadataDto integrationMetadataDto
     ) {
-        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
-                userPermissionsConsumerEnabled,
-                authentication,
-                integrationMetadataDto.getSourceApplicationId()
-        );
+        if (userPermissionsConsumerEnabled) {
+            UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
+        }
 
         Set<ConstraintViolation<IntegrationMetadataDto>> constraintViolations = validator.validate(integrationMetadataDto);
         if (!constraintViolations.isEmpty()) {
