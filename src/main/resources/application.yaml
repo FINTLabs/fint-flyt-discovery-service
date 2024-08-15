@@ -1,5 +1,9 @@
 fint:
   application-id: fint-flyt-discovery-service
+  flyt:
+    resource-server:
+      user-permissions-consumer:
+        enabled: true
 server:
   max-http-header-size: 40KB
   error:
