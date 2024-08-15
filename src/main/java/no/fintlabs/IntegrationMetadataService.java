@@ -32,7 +32,8 @@ public class IntegrationMetadataService {
     }
 
     public Collection<IntegrationMetadataDto> getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
-            long sourceApplicationId, String sourceApplicationIntegrationId
+            long sourceApplicationId,
+            String sourceApplicationIntegrationId
     ) {
         return integrationMetadataRepository
                 .findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
@@ -49,6 +50,12 @@ public class IntegrationMetadataService {
                 .findById(id)
                 .map(integrationMetadataMappingService::toDto)
                 .map(IntegrationMetadataDto::getInstanceMetadata);
+    }
+
+    public Optional<IntegrationMetadataDto> getById(long id) {
+        return integrationMetadataRepository
+                .findById(id)
+                .map(integrationMetadataMappingService::toDto);
     }
 
     public boolean versionExists(IntegrationMetadataDto integrationMetadataDto) {

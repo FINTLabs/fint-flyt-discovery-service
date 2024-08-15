@@ -58,4 +58,8 @@ public class IntegrationMetadata {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public IntegrationMetadata map(Object toDto) {
+        return null;
+    }
 }

@@ -10,11 +10,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +29,9 @@ class IntegrationMetadataControllerTest {
 
     @Mock
     private Validator validator;
+
+    @Mock
+    Authentication authentication;
 
     @Mock
     private ValidationErrorsFormattingService validationErrorsFormattingService;
@@ -52,7 +55,7 @@ class IntegrationMetadataControllerTest {
                 .thenReturn(Collections.singletonList(dto));
 
         ResponseEntity<Collection<IntegrationMetadataDto>> response =
-                controller.getIntegrationMetadataForSourceApplication(1L, Optional.empty());
+                controller.getIntegrationMetadataForSourceApplication(authentication, 1L, Optional.empty());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -66,7 +69,7 @@ class IntegrationMetadataControllerTest {
                 .thenReturn(Collections.singletonList(dto));
 
         ResponseEntity<Collection<IntegrationMetadataDto>> response =
-                controller.getIntegrationMetadataForIntegration(1L, "integrationId");
+                controller.getIntegrationMetadataForIntegration(authentication, 1L, "integrationId");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -79,7 +82,7 @@ class IntegrationMetadataControllerTest {
         when(integrationMetadataService.getInstanceMetadataById(1L)).thenReturn(Optional.of(dto));
 
         ResponseEntity<InstanceMetadataContentDto> response =
-                controller.getInstanceElementMetadataForIntegrationMetadataWithId(1L);
+                controller.getInstanceElementMetadataForIntegrationMetadataWithId(authentication, 1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -90,7 +93,7 @@ class IntegrationMetadataControllerTest {
         when(integrationMetadataService.getInstanceMetadataById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class,
-                () -> controller.getInstanceElementMetadataForIntegrationMetadataWithId(1L));
+                () -> controller.getInstanceElementMetadataForIntegrationMetadataWithId(authentication, 1L));
     }
 
     @Test

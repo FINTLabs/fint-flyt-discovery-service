@@ -10,7 +10,8 @@ fint:
           internal:
             enabled: true
             authorized-org-id-role-pairs-json: "{\"vlfk.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/user\"],\"vigo.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/developer\"]}"
-
+      user-permissions-consumer:
+        enabled: true
   kafka:
     default-replicas: 1
 spring:
