@@ -87,7 +87,6 @@ public class IntegrationMetadataController {
             @AuthenticationPrincipal Authentication authentication,
             @PathVariable Long metadataId
     ) {
-
         IntegrationMetadataDto integrationMetadataDto = integrationMetadataService
                 .getById(metadataId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

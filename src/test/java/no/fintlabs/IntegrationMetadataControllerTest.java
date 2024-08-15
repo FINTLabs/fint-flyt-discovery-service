@@ -78,8 +78,11 @@ class IntegrationMetadataControllerTest {
 
     @Test
     public void getInstanceElementMetadataForIntegrationMetadataWithId_ValidId_ReturnsData() {
-        InstanceMetadataContentDto dto = mock(InstanceMetadataContentDto.class);
-        when(integrationMetadataService.getInstanceMetadataById(1L)).thenReturn(Optional.of(dto));
+        IntegrationMetadataDto integrationMetadataDto = mock(IntegrationMetadataDto.class);
+        InstanceMetadataContentDto instanceMetadataContentDto = mock(InstanceMetadataContentDto.class);
+
+        when(integrationMetadataService.getById(1L)).thenReturn(Optional.of(integrationMetadataDto));
+        when(integrationMetadataDto.getInstanceMetadata()).thenReturn(instanceMetadataContentDto);
 
         ResponseEntity<InstanceMetadataContentDto> response =
                 controller.getInstanceElementMetadataForIntegrationMetadataWithId(authentication, 1L);
