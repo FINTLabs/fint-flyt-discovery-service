@@ -109,7 +109,7 @@ class IntegrationMetadataControllerTest {
         when(violations.isEmpty()).thenReturn(false);
         when(validator.validate(dto)).thenReturn(violations);
 
-        assertThrows(ResponseStatusException.class, () -> controller.post(dto));
+        assertThrows(ResponseStatusException.class, () -> controller.post(authentication, dto));
     }
 
     @Test
@@ -119,7 +119,7 @@ class IntegrationMetadataControllerTest {
         when(validator.validate(dto)).thenReturn(violations);
         when(integrationMetadataService.versionExists(dto)).thenReturn(false);
 
-        ResponseEntity<?> response = controller.post(dto);
+        ResponseEntity<?> response = controller.post(authentication, dto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
@@ -131,7 +131,7 @@ class IntegrationMetadataControllerTest {
         when(validator.validate(dto)).thenReturn(violations);
         when(integrationMetadataService.versionExists(dto)).thenReturn(true);
 
-        assertThrows(ResponseStatusException.class, () -> controller.post(dto));
+        assertThrows(ResponseStatusException.class, () -> controller.post(authentication, dto));
     }
 
 }

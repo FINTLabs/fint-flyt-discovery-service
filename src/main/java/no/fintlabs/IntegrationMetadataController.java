@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -55,7 +54,11 @@ public class IntegrationMetadataController {
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "bareSisteVersjoner") Optional<Boolean> onlyLatestVersions
     ) {
-        checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
+        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
+                userPermissionsConsumerEnabled,
+                authentication,
+                sourceApplicationId
+        );
 
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getIntegrationMetadataForSourceApplication(
@@ -72,7 +75,11 @@ public class IntegrationMetadataController {
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "kildeapplikasjonIntegrasjonId") String sourceApplicationIntegrationId
     ) {
-        checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
+        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
+                userPermissionsConsumerEnabled,
+                authentication,
+                sourceApplicationId
+        );
 
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
@@ -91,13 +98,26 @@ public class IntegrationMetadataController {
                 .getById(metadataId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
+        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
+                userPermissionsConsumerEnabled,
+                authentication,
+                integrationMetadataDto.getSourceApplicationId()
+        );
 
         return ResponseEntity.ok(integrationMetadataDto.getInstanceMetadata());
     }
 
     @PostMapping
-    public ResponseEntity<?> post(@RequestBody IntegrationMetadataDto integrationMetadataDto) {
+    public ResponseEntity<?> post(
+            @AuthenticationPrincipal Authentication authentication,
+            @RequestBody IntegrationMetadataDto integrationMetadataDto
+    ) {
+        UserAuthorizationUtil.checkIfUserHasAccessToSourceApplication(
+                userPermissionsConsumerEnabled,
+                authentication,
+                integrationMetadataDto.getSourceApplicationId()
+        );
+
         Set<ConstraintViolation<IntegrationMetadataDto>> constraintViolations = validator.validate(integrationMetadataDto);
         if (!constraintViolations.isEmpty()) {
             throw new ResponseStatusException(
@@ -110,20 +130,6 @@ public class IntegrationMetadataController {
         }
         integrationMetadataService.save(integrationMetadataDto);
         return ResponseEntity.ok().build();
-    }
-
-    private void checkIfUserHasAccessToSourceApplication(Authentication authentication, Long sourceApplicationId) {
-        if (userPermissionsConsumerEnabled) {
-            List<Long> allowedSourceApplicationIds =
-                    UserAuthorizationUtil.convertSourceApplicationIdsStringToList(authentication);
-
-            if (!allowedSourceApplicationIds.contains(sourceApplicationId)) {
-                throw new ResponseStatusException(
-                        HttpStatus.FORBIDDEN,
-                        "You do not have permission to access metadata for source application with id=" + sourceApplicationId
-                );
-            }
-        }
     }
 
 }
