@@ -25,7 +25,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
         EventTopicNameParameters eventTopicNameParameters = EventTopicNameParameters.builder()
                 .eventName("integration-metadata-received")
                 .build();
-        eventTopicService.ensureTopic(eventTopicNameParameters, 15778463000L);
+        eventTopicService.ensureTopic(eventTopicNameParameters, 0);
 
         return eventConsumerFactoryService.createRecordConsumerFactory(
                 IntegrationMetadata.class,
