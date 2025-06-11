@@ -5,9 +5,10 @@ namespace: fintlabs-no
 resources:
   - ../../../base
 
-commonLabels:
-  app.kubernetes.io/instance: fint-flyt-discovery-service_fintlabs_no
-  fintlabs.no/org-id: fintlabs.no
+labels:
+  - pairs:
+      app.kubernetes.io/instance: fint-flyt-discovery-service_fintlabs_no
+      fintlabs.no/org-id: fintlabs.no
 
 patches:
   - patch: |-
@@ -23,6 +24,17 @@ patches:
       - op: replace
         path: "/spec/ingress/basePath"
         value: "/beta/fintlabs-no/api/intern/metadata"
+      - op: replace
+        path: "/spec/env/1/value"
+        value: |
+          {
+            "fintlabs.no":["https://role-catalog.vigoiks.no/vigo/flyt/user"],
+            "vigo.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"],
+            "novari.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer"]
+          }
+      - op: replace
+        path: "/spec/probes/readiness/path"
+        value: "/beta/fintlabs-no/actuator/health"
 
     target:
       kind: Application
