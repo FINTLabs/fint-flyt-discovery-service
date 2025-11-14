@@ -1,4 +1,4 @@
-fint:
+novari:
   org-id: fintlabs.no
   flyt:
     resource-server:
@@ -6,14 +6,13 @@ fint:
         enabled: true
       security:
         api:
-          external:
-            enabled: true
-            authorized-client-ids: 1
           internal:
             enabled: true
-            authorized-org-id-role-pairs-json: "{\"vlfk.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/user\"],\"vigo.no\":[\"https://role-catalog.vigoiks.no/vigo/flyt/developer\"]}"
+            authorized-org-id-role-pairs-json: "{\"vigo.no\":[\"DEVELOPER\", \"USER\"]}"
   kafka:
     default-replicas: 1
+    topic:
+      org-id: fintlabs-no
 spring:
   kafka:
     bootstrap-servers: localhost:9092

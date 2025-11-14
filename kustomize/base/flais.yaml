@@ -34,15 +34,15 @@ spec:
   env:
     - name: JAVA_TOOL_OPTIONS
       value: '-XX:+ExitOnOutOfMemoryError -Xmx1840M'
-    - name: fint.flyt.resource-server.security.api.internal.authorized-org-id-role-pairs-json
+    - name: novari.flyt.resource-server.security.api.internal.authorized-org-id-role-pairs-json
       value: |
         {
-          "vigo.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer", "https://role-catalog.vigoiks.no/vigo/flyt/user"],
-          "novari.no":["https://role-catalog.vigoiks.no/vigo/flyt/developer", "https://role-catalog.vigoiks.no/vigo/flyt/user"]
+          "vigo.no":["DEVELOPER", "USER"],
+          "novari.no":["DEVELOPER", "USER"]
         }
-    - name: fint.flyt.resource-server.security.api.internal.enabled
+    - name: novari.flyt.resource-server.security.api.internal.enabled
       value: "true"
-    - name: fint.flyt.resource-server.user-permissions-consumer.enabled
+    - name: novari.flyt.resource-server.user-permissions-consumer.enabled
       value: "true"
   resources:
     limits:
