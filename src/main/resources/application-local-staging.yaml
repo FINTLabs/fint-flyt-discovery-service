@@ -2,8 +2,6 @@ novari:
   org-id: fintlabs.no
   flyt:
     resource-server:
-      user-permissions-consumer:
-        enabled: true
       security:
         api:
           internal:
