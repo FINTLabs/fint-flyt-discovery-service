@@ -47,7 +47,7 @@ dependencies {
 
     implementation("org.springframework.kafka:spring-kafka")
     implementation("no.novari:kafka:5.0.0-rc-18")
-    implementation("no.novari:flyt-resource-server:6.0.0-rc-22")
+    implementation("no.novari:flyt-resource-server:6.0.0-rc-23")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
