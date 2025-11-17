@@ -46,15 +46,13 @@ dependencies {
     testRuntimeOnly("com.h2database:h2")
 
     implementation("org.springframework.kafka:spring-kafka")
-    implementation("no.novari:kafka:5.0.0-rc-16")
-    implementation("no.novari:flyt-resource-server:6.0.0-rc-20")
+    implementation("no.novari:kafka:5.0.0-rc-18")
+    implementation("no.novari:flyt-resource-server:6.0.0-rc-22")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
-
-    implementation("no.novari:flyt-resource-server:6.0.0-rc-20")
 
     implementation("org.hibernate.validator:hibernate-validator")
 
