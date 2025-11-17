@@ -36,7 +36,7 @@ public class MetadataRequestConsumerConfiguration {
                 .builder()
                 .topicNamePrefixParameters(
                         TopicNamePrefixParameters
-                                .builder()
+                                .stepBuilder()
                                 .orgIdApplicationDefault()
                                 .domainContextApplicationDefault()
                                 .build()
@@ -89,7 +89,7 @@ public class MetadataRequestConsumerConfiguration {
                 .parameterName("metadata-id")
                 .topicNamePrefixParameters(
                         TopicNamePrefixParameters
-                                .builder()
+                                .stepBuilder()
                                 .orgIdApplicationDefault()
                                 .domainContextApplicationDefault()
                                 .build()

@@ -1,3 +1,7 @@
+fint:
+  org-id: fintlabs.no
+  kafka:
+    enable-ssl: false
 novari:
   org-id: fintlabs.no
   flyt:

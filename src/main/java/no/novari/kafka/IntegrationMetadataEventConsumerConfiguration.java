@@ -36,7 +36,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
                 .eventName("integration-metadata-received")
                 .topicNamePrefixParameters(
                         TopicNamePrefixParameters
-                                .builder()
+                                .stepBuilder()
                                 .orgIdApplicationDefault()
                                 .domainContextApplicationDefault()
                                 .build()
@@ -44,7 +44,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
                 .build();
         eventTopicService.createOrModifyTopic(
                 eventTopicNameParameters,
-                EventTopicConfiguration.builder()
+                EventTopicConfiguration.stepBuilder()
                         .partitions(PARTITIONS)
                         .retentionTime(Duration.ofDays(RETENTION_TIME_IN_DAYS))
                         .cleanupFrequency(EventCleanupFrequency.NORMAL)
