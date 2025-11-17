@@ -1,12 +1,13 @@
 package no.novari;
 
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import no.novari.flyt.resourceserver.security.user.UserAuthorizationService;
 import no.novari.model.dtos.InstanceMetadataContentDto;
 import no.novari.model.dtos.IntegrationMetadataDto;
 import no.novari.model.entities.IntegrationMetadata;
 import no.novari.validation.ValidationErrorsFormattingService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,8 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -30,8 +29,6 @@ public class IntegrationMetadataController {
 
     private final Validator validator;
     private final ValidationErrorsFormattingService validationErrorsFormattingService;
-    @Value("${novari.flyt.resource-server.user-permissions-consumer.enabled:false}")
-    private boolean userPermissionsConsumerEnabled;
     private final UserAuthorizationService userAuthorizationService;
 
     public IntegrationMetadataController(
@@ -57,9 +54,7 @@ public class IntegrationMetadataController {
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "bareSisteVersjoner") Optional<Boolean> onlyLatestVersions
     ) {
-        if (userPermissionsConsumerEnabled) {
-            userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
-        }
+        userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
 
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getIntegrationMetadataForSourceApplication(
@@ -76,9 +71,7 @@ public class IntegrationMetadataController {
             @RequestParam(name = "kildeapplikasjonId") Long sourceApplicationId,
             @RequestParam(name = "kildeapplikasjonIntegrasjonId") String sourceApplicationIntegrationId
     ) {
-        if (userPermissionsConsumerEnabled) {
-            userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
-        }
+        userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId);
 
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
@@ -97,9 +90,7 @@ public class IntegrationMetadataController {
                 .getById(metadataId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        if (userPermissionsConsumerEnabled) {
-            userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
-        }
+        userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
 
         return ResponseEntity.ok(integrationMetadataDto.getInstanceMetadata());
     }
@@ -109,9 +100,7 @@ public class IntegrationMetadataController {
             @AuthenticationPrincipal Authentication authentication,
             @RequestBody IntegrationMetadataDto integrationMetadataDto
     ) {
-        if (userPermissionsConsumerEnabled) {
-            userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
-        }
+        userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, integrationMetadataDto.getSourceApplicationId());
 
         Set<ConstraintViolation<IntegrationMetadataDto>> constraintViolations = validator.validate(integrationMetadataDto);
         if (!constraintViolations.isEmpty()) {

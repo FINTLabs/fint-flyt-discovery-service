@@ -1,5 +1,7 @@
 package no.novari;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import no.novari.flyt.resourceserver.security.user.UserAuthorizationService;
 import no.novari.model.dtos.InstanceMetadataContentDto;
 import no.novari.model.dtos.IntegrationMetadataDto;
@@ -15,8 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,9 +72,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadata() throws NoSuchFieldException, IllegalAccessException {
-        setUserPermissionsConsumerEnabled();
-
+    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadata() {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaimAsString("sourceApplicationIds")).thenReturn("2");
 
@@ -109,9 +107,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataWithSourceApplicationIdAndSourceApplicationIntegrationIdAsParams() throws NoSuchFieldException, IllegalAccessException {
-        setUserPermissionsConsumerEnabled();
-
+    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataWithSourceApplicationIdAndSourceApplicationIntegrationIdAsParams() {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaimAsString("sourceApplicationIds")).thenReturn("2");
 
@@ -155,9 +151,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToInstanceMetadataContent() throws NoSuchFieldException, IllegalAccessException {
-        setUserPermissionsConsumerEnabled();
-
+    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToInstanceMetadataContent() {
         Long metadataId = 1L;
 
         Jwt jwt = mock(Jwt.class);
@@ -198,9 +192,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataOnPost() throws NoSuchFieldException, IllegalAccessException {
-        setUserPermissionsConsumerEnabled();
-
+    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataOnPost() {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaimAsString("sourceApplicationIds")).thenReturn("2");
 
@@ -243,12 +235,6 @@ class IntegrationMetadataControllerTest {
         when(integrationMetadataService.versionExists(dto)).thenReturn(true);
 
         assertThrows(ResponseStatusException.class, () -> controller.post(authentication, dto));
-    }
-
-    private void setUserPermissionsConsumerEnabled() throws NoSuchFieldException, IllegalAccessException {
-        java.lang.reflect.Field field = IntegrationMetadataController.class.getDeclaredField("userPermissionsConsumerEnabled");
-        field.setAccessible(true);
-        field.set(controller, true);
     }
 
 }
