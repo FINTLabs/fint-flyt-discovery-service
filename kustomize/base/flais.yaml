@@ -34,12 +34,6 @@ spec:
   env:
     - name: JAVA_TOOL_OPTIONS
       value: '-XX:+ExitOnOutOfMemoryError -Xmx1840M'
-    - name: novari.flyt.resource-server.security.api.internal.authorized-org-id-role-pairs-json
-      value: |
-        {
-          "vigo.no":["DEVELOPER", "USER"],
-          "novari.no":["DEVELOPER", "USER"]
-        }
   resources:
     limits:
       memory: "2048Mi"
