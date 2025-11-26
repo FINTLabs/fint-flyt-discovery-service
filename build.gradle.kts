@@ -34,27 +34,22 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("com.h2database:h2")
 
-    implementation("org.springframework.kafka:spring-kafka")
-    implementation("no.novari:kafka:5.0.0-rc-20")
-    implementation("no.novari:flyt-resource-server:6.0.0-rc-26")
+    implementation("no.novari:kafka:5.0.0-rc-21")
+    implementation("no.novari:flyt-resource-server:6.0.0-rc-27")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
-
-    implementation("org.hibernate.validator:hibernate-validator")
 
     implementation("org.apache.commons:commons-lang3:3.18.0")
     implementation("org.apache.commons:commons-collections4:4.4")
