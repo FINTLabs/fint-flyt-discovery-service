@@ -23,6 +23,8 @@ import java.time.Duration;
 @Configuration
 public class MetadataRequestConsumerConfiguration {
 
+    public static final Duration RETENTION_TIME_METADATA_TOPIC = Duration.ofMinutes(10);
+    public static final Duration RETENTION_TIME_INSTANCE_METADATA_TOPIC = Duration.ZERO;
 
     @Bean
     ConcurrentMessageListenerContainer<String, Long>
@@ -49,7 +51,7 @@ public class MetadataRequestConsumerConfiguration {
                         requestTopicNameParameters,
                         RequestTopicConfiguration
                                 .builder()
-                                .retentionTime(Duration.ofMinutes(5))
+                                .retentionTime(RETENTION_TIME_METADATA_TOPIC)
                                 .build()
                 );
 
@@ -100,7 +102,7 @@ public class MetadataRequestConsumerConfiguration {
                         requestTopicNameParameters,
                         RequestTopicConfiguration
                                 .builder()
-                                .retentionTime(Duration.ZERO)
+                                .retentionTime(RETENTION_TIME_INSTANCE_METADATA_TOPIC)
                                 .build()
                 );
 

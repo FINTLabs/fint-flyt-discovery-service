@@ -23,7 +23,7 @@ import java.time.Duration;
 public class IntegrationMetadataEventConsumerConfiguration {
 
     private static final int PARTITIONS = 1;
-    private static final int RETENTION_TIME_IN_DAYS = 7;
+    private static final Duration RETENTION_TIME = Duration.ofDays(7);
 
     @Bean
     public ConcurrentMessageListenerContainer<String, IntegrationMetadata> integrationMetadataEventConsumer(
@@ -46,7 +46,7 @@ public class IntegrationMetadataEventConsumerConfiguration {
                 eventTopicNameParameters,
                 EventTopicConfiguration.stepBuilder()
                         .partitions(PARTITIONS)
-                        .retentionTime(Duration.ofDays(RETENTION_TIME_IN_DAYS))
+                        .retentionTime(RETENTION_TIME)
                         .cleanupFrequency(EventCleanupFrequency.NORMAL)
                         .build()
         );
