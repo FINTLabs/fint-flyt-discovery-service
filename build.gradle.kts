@@ -43,8 +43,8 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("com.h2database:h2")
 
-    implementation("no.novari:kafka:5.0.0-rc-21")
-    implementation("no.novari:flyt-resource-server:6.0.0-rc-27")
+    implementation("no.novari:kafka:5.0.0")
+    implementation("no.novari:flyt-resource-server:6.0.0")
 
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
