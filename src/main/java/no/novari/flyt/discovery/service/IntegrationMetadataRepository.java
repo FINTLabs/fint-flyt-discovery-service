@@ -23,8 +23,26 @@ public interface IntegrationMetadataRepository extends JpaRepository<Integration
             @Param(value = "sourceApplicationId") Long sourceApplicationId
     );
 
+    @Query(value = "SELECT im" +
+            " FROM IntegrationMetadata im" +
+            " WHERE im.sourceApplicationId IN :sourceApplicationIds" +
+            " AND im.version IN (" +
+            "   SELECT MAX(iim.version)" +
+            "   FROM IntegrationMetadata iim" +
+            "   WHERE im.sourceApplicationId = iim.sourceApplicationId" +
+            "   AND im.sourceApplicationIntegrationId = iim.sourceApplicationIntegrationId" +
+            " )"
+    )
+    Collection<IntegrationMetadata> findAllWithLatestVersionsForSourceApplications(
+            @Param(value = "sourceApplicationIds") Collection<Long> sourceApplicationIds
+    );
+
     Collection<IntegrationMetadata> findAllBySourceApplicationId(
             Long sourceApplicationId
+    );
+
+    Collection<IntegrationMetadata> findAllBySourceApplicationIdIn(
+            Collection<Long> sourceApplicationIds
     );
 
     Collection<IntegrationMetadata> findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
