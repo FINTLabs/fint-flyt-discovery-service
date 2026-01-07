@@ -30,6 +30,7 @@ Base path: `/api/intern/metadata`
 | Method | Path | Description | Request body | Response |
 | --- | --- | --- | --- | --- |
 | `GET` | `/?kildeapplikasjonId={id}&bareSisteVersjoner={bool?}` | List metadata for a source application; optional `bareSisteVersjoner` limits to latest versions per integration. | – | `200 OK` with `IntegrationMetadataDto[]`; `403/404/500` on errors. |
+| `GET` | `/?kildeapplikasjonIds={id1,id2,...}&bareSisteVersjoner={bool?}` | List metadata for multiple source applications; optional `bareSisteVersjoner` limits to latest versions per integration. | – | `200 OK` with `{sourceApplicationId: IntegrationMetadataDto[]}` (empty list per requested id when none found); `403/404/500` on errors. |
 | `GET` | `/?kildeapplikasjonId={id}&kildeapplikasjonIntegrasjonId={integrationId}` | List all versions for a specific integration within a source application. | – | `200 OK` with `IntegrationMetadataDto[]`; `403/404/500` on errors. |
 | `GET` | `/{metadataId}/instans-metadata` | Fetch the instance metadata content for a given integration metadata ID. | – | `200 OK` with `InstanceMetadataContentDto`; `404` when missing; `403` if unauthorized. |
 | `POST` | `/` | Publish a new integration metadata version. | `IntegrationMetadataDto` (validated; must be a unique version per source application/integration). | `200 OK` on success; `409` if version exists; `422` on validation errors. |

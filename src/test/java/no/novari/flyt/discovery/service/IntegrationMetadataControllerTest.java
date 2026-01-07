@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,7 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 class IntegrationMetadataControllerTest {
 
@@ -80,6 +83,31 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
+    public void shouldReturnHttp200IfIntegrationMetadataIsFoundForSourceApplications() {
+        IntegrationMetadataDto dto = mock(IntegrationMetadataDto.class);
+        List<Long> sourceApplicationIds = List.of(1L, 2L);
+        when(integrationMetadataService.getIntegrationMetadataForSourceApplications(sourceApplicationIds, false))
+                .thenReturn(java.util.Map.of(
+                        1L, Collections.singletonList(dto),
+                        2L, Collections.emptyList()
+                ));
+
+        ResponseEntity<java.util.Map<Long, Collection<IntegrationMetadataDto>>> response =
+                controller.getIntegrationMetadataForSourceApplications(authentication, sourceApplicationIds, Optional.empty());
+
+        verify(userAuthorizationService, times(1))
+                .checkIfUserHasAccessToSourceApplication(authentication, 1L);
+        verify(userAuthorizationService, times(1))
+                .checkIfUserHasAccessToSourceApplication(authentication, 2L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(2, response.getBody().size());
+        assertEquals(1, response.getBody().get(1L).size());
+        assertEquals(0, response.getBody().get(2L).size());
+    }
+
+    @Test
     public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadata() {
         Jwt jwt = mock(Jwt.class);
         when(jwt.getClaimAsString("sourceApplicationIds")).thenReturn("2");
@@ -98,6 +126,31 @@ class IntegrationMetadataControllerTest {
 
         assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
         assertEquals("You do not have permission to access or modify data that is related to source application with id=1", exception.getReason());
+    }
+
+    @Test
+    public void shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataForSourceApplications() {
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getClaimAsString("sourceApplicationIds")).thenReturn("2");
+
+        when(authentication.getPrincipal()).thenReturn(jwt);
+        doThrow(new ResponseStatusException(
+                HttpStatus.FORBIDDEN,
+                "You do not have permission to access or modify data that is related to source application with id=2"
+        )).when(userAuthorizationService)
+                .checkIfUserHasAccessToSourceApplication(authentication, 2L);
+
+        ResponseStatusException exception = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getIntegrationMetadataForSourceApplications(
+                        authentication,
+                        List.of(1L, 2L),
+                        Optional.empty()
+                )
+        );
+
+        assertEquals(HttpStatus.FORBIDDEN, exception.getStatusCode());
+        assertEquals("You do not have permission to access or modify data that is related to source application with id=2", exception.getReason());
     }
 
     @Test

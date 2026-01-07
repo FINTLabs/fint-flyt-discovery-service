@@ -6,7 +6,11 @@ import no.novari.flyt.discovery.service.model.dtos.IntegrationMetadataDto;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class IntegrationMetadataService {
@@ -29,6 +33,28 @@ public class IntegrationMetadataService {
                 .stream()
                 .map(integrationMetadataMappingService::toDto)
                 .toList();
+    }
+
+    public Map<Long, Collection<IntegrationMetadataDto>> getIntegrationMetadataForSourceApplications(
+            Collection<Long> sourceApplicationIds,
+            boolean onlyLatestVersions
+    ) {
+        if (sourceApplicationIds == null || sourceApplicationIds.isEmpty()) {
+            return Map.of();
+        }
+
+        Map<Long, List<IntegrationMetadataDto>> grouped = (onlyLatestVersions
+                ? integrationMetadataRepository.findAllWithLatestVersionsForSourceApplications(sourceApplicationIds)
+                : integrationMetadataRepository.findAllBySourceApplicationIdIn(sourceApplicationIds))
+                .stream()
+                .map(integrationMetadataMappingService::toDto)
+                .collect(Collectors.groupingBy(IntegrationMetadataDto::getSourceApplicationId));
+
+        Map<Long, Collection<IntegrationMetadataDto>> result = new LinkedHashMap<>();
+        for (Long sourceApplicationId : sourceApplicationIds) {
+            result.put(sourceApplicationId, grouped.getOrDefault(sourceApplicationId, List.of()));
+        }
+        return result;
     }
 
     public Collection<IntegrationMetadataDto> getAllForSourceApplicationIdAndSourceApplicationIntegrationId(

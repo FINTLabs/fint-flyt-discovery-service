@@ -71,4 +71,38 @@ class IntegrationMetadataRepositoryTest {
         assertEquals(Long.valueOf(1), resultList.get(1).getVersion());
     }
 
+    @Test
+    void givenEntitiesForSourceApplications_whenFindAllWithLatestVersionsForSourceApplicationsIsCalled_shouldReturnEntitiesOfLatestVersionRelatedToTheSourceApplications() {
+        integrationMetadataRepository.saveAll(Arrays.asList(
+                createIntegrationMetadata(1L, "TEST-1", 1L),
+                createIntegrationMetadata(1L, "TEST-1", 2L),
+                createIntegrationMetadata(1L, "TEST-2", 1L),
+                createIntegrationMetadata(2L, "TEST-1", 1L),
+                createIntegrationMetadata(2L, "TEST-1", 3L),
+                createIntegrationMetadata(3L, "TEST-1", 5L)
+        ));
+
+        Collection<IntegrationMetadata> result = integrationMetadataRepository
+                .findAllWithLatestVersionsForSourceApplications(List.of(1L, 2L));
+
+        assertEquals(3, result.size());
+
+        List<IntegrationMetadata> resultList = new ArrayList<>(result);
+        resultList.sort(Comparator
+                .comparing(IntegrationMetadata::getSourceApplicationId)
+                .thenComparing(IntegrationMetadata::getSourceApplicationIntegrationId));
+
+        assertEquals(Long.valueOf(1), resultList.get(0).getSourceApplicationId());
+        assertEquals("TEST-1", resultList.get(0).getSourceApplicationIntegrationId());
+        assertEquals(Long.valueOf(2), resultList.get(0).getVersion());
+
+        assertEquals(Long.valueOf(1), resultList.get(1).getSourceApplicationId());
+        assertEquals("TEST-2", resultList.get(1).getSourceApplicationIntegrationId());
+        assertEquals(Long.valueOf(1), resultList.get(1).getVersion());
+
+        assertEquals(Long.valueOf(2), resultList.get(2).getSourceApplicationId());
+        assertEquals("TEST-1", resultList.get(2).getSourceApplicationIntegrationId());
+        assertEquals(Long.valueOf(3), resultList.get(2).getVersion());
+    }
+
 }

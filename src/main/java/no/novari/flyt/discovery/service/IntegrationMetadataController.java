@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -65,6 +66,28 @@ public class IntegrationMetadataController {
         Collection<IntegrationMetadataDto> integrationMetadata =
                 integrationMetadataService.getIntegrationMetadataForSourceApplication(
                         sourceApplicationId,
+                        onlyLatestVersions.orElse(false)
+                );
+
+        return ResponseEntity.ok(integrationMetadata);
+    }
+
+    @GetMapping(params = {"kildeapplikasjonIds"})
+    public ResponseEntity<Map<Long, Collection<IntegrationMetadataDto>>> getIntegrationMetadataForSourceApplications(
+            @AuthenticationPrincipal Authentication authentication,
+            @RequestParam(name = "kildeapplikasjonIds") Collection<Long> sourceApplicationIds,
+            @RequestParam(name = "bareSisteVersjoner") Optional<Boolean> onlyLatestVersions
+    ) {
+        sourceApplicationIds.forEach(
+                sourceApplicationId -> userAuthorizationService.checkIfUserHasAccessToSourceApplication(
+                        authentication,
+                        sourceApplicationId
+                )
+        );
+
+        Map<Long, Collection<IntegrationMetadataDto>> integrationMetadata =
+                integrationMetadataService.getIntegrationMetadataForSourceApplications(
+                        sourceApplicationIds,
                         onlyLatestVersions.orElse(false)
                 );
 

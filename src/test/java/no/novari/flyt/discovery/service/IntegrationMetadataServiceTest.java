@@ -68,6 +68,41 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
+    void testGetIntegrationMetadataForSourceApplicationsWithLatestVersions() {
+        List<Long> sourceApplicationIds = List.of(1L, 2L);
+        when(integrationMetadataRepository.findAllWithLatestVersionsForSourceApplications(sourceApplicationIds))
+                .thenReturn(List.of(entity));
+        when(dto.getSourceApplicationId()).thenReturn(1L);
+        when(integrationMetadataMappingService.toDto(entity)).thenReturn(dto);
+
+        java.util.Map<Long, java.util.Collection<IntegrationMetadataDto>> result =
+                service.getIntegrationMetadataForSourceApplications(sourceApplicationIds, true);
+
+        assertEquals(2, result.size());
+        assertEquals(1, result.get(1L).size());
+        assertEquals(dto, result.get(1L).stream().findFirst().orElseThrow());
+        assertEquals(0, result.get(2L).size());
+    }
+
+    @Test
+    void testGetIntegrationMetadataForSourceApplicationsWithoutLatestVersions() {
+        List<Long> sourceApplicationIds = List.of(1L, 2L);
+        when(integrationMetadataRepository.findAllBySourceApplicationIdIn(sourceApplicationIds))
+                .thenReturn(List.of(entity));
+        when(dto.getSourceApplicationId()).thenReturn(1L);
+        when(integrationMetadataMappingService.toDto(entity))
+                .thenReturn(dto);
+
+        java.util.Map<Long, java.util.Collection<IntegrationMetadataDto>> result =
+                service.getIntegrationMetadataForSourceApplications(sourceApplicationIds, false);
+
+        assertEquals(2, result.size());
+        assertEquals(1, result.get(1L).size());
+        assertEquals(dto, result.get(1L).stream().findFirst().orElseThrow());
+        assertEquals(0, result.get(2L).size());
+    }
+
+    @Test
     void testGetAllForSourceApplicationIdAndSourceApplicationIntegrationId() {
         String integrationId = "integrationId";
 
