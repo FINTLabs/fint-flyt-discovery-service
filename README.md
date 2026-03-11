@@ -129,3 +129,4 @@ The script rewrites each `kustomization.yaml` with namespace-specific paths, Kaf
 4. Add or update tests to cover new behaviour and edge cases.
 
 FINT Flyt Discovery Service is maintained by the FINT Flyt team. Contact the team via the internal Slack channel or open an issue in this repository for questions or enhancements.
+
