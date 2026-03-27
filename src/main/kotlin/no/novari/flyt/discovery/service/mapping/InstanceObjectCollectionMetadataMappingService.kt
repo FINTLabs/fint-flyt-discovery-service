@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service
 class InstanceObjectCollectionMetadataMappingService(
     @param:Lazy private val instanceMetadataContentMappingService: InstanceMetadataContentMappingService,
 ) {
-    fun toEntity(
-        instanceObjectCollectionMetadataDto: InstanceObjectCollectionMetadataDto,
-    ): InstanceObjectCollectionMetadata =
+    fun toEntity(instanceObjectCollectionMetadataDto: InstanceObjectCollectionMetadataDto): InstanceObjectCollectionMetadata =
         InstanceObjectCollectionMetadata(
             displayName = requireNotNull(instanceObjectCollectionMetadataDto.displayName),
             objectMetadata =
@@ -21,9 +19,7 @@ class InstanceObjectCollectionMetadataMappingService(
             key = requireNotNull(instanceObjectCollectionMetadataDto.key),
         )
 
-    fun toDto(
-        instanceObjectCollectionMetadata: InstanceObjectCollectionMetadata,
-    ): InstanceObjectCollectionMetadataDto =
+    fun toDto(instanceObjectCollectionMetadata: InstanceObjectCollectionMetadata): InstanceObjectCollectionMetadataDto =
         InstanceObjectCollectionMetadataDto(
             displayName = requireNotNull(instanceObjectCollectionMetadata.displayName),
             objectMetadata =

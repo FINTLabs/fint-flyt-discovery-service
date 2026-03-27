@@ -30,7 +30,9 @@ class IntegrationMetadataController(
 ) {
     @GetMapping(params = ["kildeapplikasjonId", "kildeapplikasjonIntegrasjonId", "bareSisteVersjoner"])
     fun getIntegrationMetadataForSourceApplication(): ResponseEntity<Collection<IntegrationMetadata>> =
-        ResponseEntity.badRequest().build()
+        ResponseEntity
+            .badRequest()
+            .build()
 
     @GetMapping(params = ["kildeapplikasjonId"])
     fun getIntegrationMetadataForSourceApplication(
