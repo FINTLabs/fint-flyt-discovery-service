@@ -17,9 +17,10 @@ class InstanceMetadataContentMappingService(
                     .map(instanceValueMetadataMappingService::toEntity)
                     .toMutableList(),
             instanceObjectCollectionMetadata =
-                instanceMetadataContentDto.instanceObjectCollectionMetadata.map(
-                    instanceObjectCollectionMetadataMappingService::toEntity,
-                ).toMutableList(),
+                instanceMetadataContentDto.instanceObjectCollectionMetadata
+                    .map(
+                        instanceObjectCollectionMetadataMappingService::toEntity,
+                    ).toMutableList(),
             categories =
                 instanceMetadataContentDto.categories
                     .map(instanceMetadataCategoryMappingService::toEntity)
