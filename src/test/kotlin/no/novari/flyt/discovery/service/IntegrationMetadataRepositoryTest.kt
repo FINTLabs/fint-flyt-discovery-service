@@ -82,12 +82,11 @@ class IntegrationMetadataRepositoryTest {
         sourceApplicationId: Long,
         sourceApplicationIntegrationId: String,
         version: Long,
-    ): IntegrationMetadata {
-        return IntegrationMetadata(
+    ): IntegrationMetadata =
+        IntegrationMetadata(
             sourceApplicationId = sourceApplicationId,
             sourceApplicationIntegrationId = sourceApplicationIntegrationId,
             version = version,
             integrationDisplayName = "displayName",
         )
-    }
 }

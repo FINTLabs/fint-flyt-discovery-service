@@ -287,8 +287,8 @@ class IntegrationMetadataControllerTest {
     private fun validIntegrationMetadataDto(
         sourceApplicationId: Long = 1L,
         instanceMetadata: InstanceMetadataContentDto? = InstanceMetadataContentDto(),
-    ): IntegrationMetadataDto {
-        return IntegrationMetadataDto(
+    ): IntegrationMetadataDto =
+        IntegrationMetadataDto(
             id = 1L,
             sourceApplicationId = sourceApplicationId,
             sourceApplicationIntegrationId = "integration-id",
@@ -297,5 +297,4 @@ class IntegrationMetadataControllerTest {
             version = 1L,
             instanceMetadata = instanceMetadata,
         )
-    }
 }

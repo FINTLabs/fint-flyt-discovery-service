@@ -184,8 +184,8 @@ class IntegrationMetadataServiceTest {
     private fun validIntegrationMetadataDto(
         version: Long = 1L,
         instanceMetadata: InstanceMetadataContentDto? = InstanceMetadataContentDto(),
-    ): IntegrationMetadataDto {
-        return IntegrationMetadataDto(
+    ): IntegrationMetadataDto =
+        IntegrationMetadataDto(
             sourceApplicationId = sourceApplicationId,
             sourceApplicationIntegrationId = "integrationId",
             sourceApplicationIntegrationUri = "uri",
@@ -193,5 +193,4 @@ class IntegrationMetadataServiceTest {
             version = version,
             instanceMetadata = instanceMetadata,
         )
-    }
 }
