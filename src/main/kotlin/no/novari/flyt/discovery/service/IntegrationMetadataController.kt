@@ -29,9 +29,8 @@ class IntegrationMetadataController(
     private val userAuthorizationService: UserAuthorizationService,
 ) {
     @GetMapping(params = ["kildeapplikasjonId", "kildeapplikasjonIntegrasjonId", "bareSisteVersjoner"])
-    fun getIntegrationMetadataForSourceApplication(): ResponseEntity<Collection<IntegrationMetadata>> {
-        return ResponseEntity.badRequest().build()
-    }
+    fun getIntegrationMetadataForSourceApplication(): ResponseEntity<Collection<IntegrationMetadata>> =
+        ResponseEntity.badRequest().build()
 
     @GetMapping(params = ["kildeapplikasjonId"])
     fun getIntegrationMetadataForSourceApplication(

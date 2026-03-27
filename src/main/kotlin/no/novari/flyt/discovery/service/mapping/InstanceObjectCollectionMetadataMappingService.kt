@@ -11,8 +11,8 @@ class InstanceObjectCollectionMetadataMappingService(
 ) {
     fun toEntity(
         instanceObjectCollectionMetadataDto: InstanceObjectCollectionMetadataDto,
-    ): InstanceObjectCollectionMetadata {
-        return InstanceObjectCollectionMetadata(
+    ): InstanceObjectCollectionMetadata =
+        InstanceObjectCollectionMetadata(
             displayName = requireNotNull(instanceObjectCollectionMetadataDto.displayName),
             objectMetadata =
                 instanceMetadataContentMappingService.toEntity(
@@ -20,10 +20,11 @@ class InstanceObjectCollectionMetadataMappingService(
                 ),
             key = requireNotNull(instanceObjectCollectionMetadataDto.key),
         )
-    }
 
-    fun toDto(instanceObjectCollectionMetadata: InstanceObjectCollectionMetadata): InstanceObjectCollectionMetadataDto {
-        return InstanceObjectCollectionMetadataDto(
+    fun toDto(
+        instanceObjectCollectionMetadata: InstanceObjectCollectionMetadata,
+    ): InstanceObjectCollectionMetadataDto =
+        InstanceObjectCollectionMetadataDto(
             displayName = requireNotNull(instanceObjectCollectionMetadata.displayName),
             objectMetadata =
                 instanceMetadataContentMappingService.toDto(
@@ -31,5 +32,4 @@ class InstanceObjectCollectionMetadataMappingService(
                 ),
             key = requireNotNull(instanceObjectCollectionMetadata.key),
         )
-    }
 }

@@ -10,8 +10,8 @@ class InstanceMetadataContentMappingService(
     private val instanceObjectCollectionMetadataMappingService: InstanceObjectCollectionMetadataMappingService,
     private val instanceMetadataCategoryMappingService: InstanceMetadataCategoryMappingService,
 ) {
-    fun toEntity(instanceMetadataContentDto: InstanceMetadataContentDto): InstanceMetadataContent {
-        return InstanceMetadataContent(
+    fun toEntity(instanceMetadataContentDto: InstanceMetadataContentDto): InstanceMetadataContent =
+        InstanceMetadataContent(
             instanceValueMetadata =
                 instanceMetadataContentDto.instanceValueMetadata
                     .map(instanceValueMetadataMappingService::toEntity)
@@ -26,10 +26,9 @@ class InstanceMetadataContentMappingService(
                     .map(instanceMetadataCategoryMappingService::toEntity)
                     .toMutableList(),
         )
-    }
 
-    fun toDto(instanceMetadataContent: InstanceMetadataContent): InstanceMetadataContentDto {
-        return InstanceMetadataContentDto(
+    fun toDto(instanceMetadataContent: InstanceMetadataContent): InstanceMetadataContentDto =
+        InstanceMetadataContentDto(
             instanceValueMetadata =
                 instanceMetadataContent.instanceValueMetadata.map(instanceValueMetadataMappingService::toDto),
             instanceObjectCollectionMetadata =
@@ -38,5 +37,4 @@ class InstanceMetadataContentMappingService(
                 ),
             categories = instanceMetadataContent.categories.map(instanceMetadataCategoryMappingService::toDto),
         )
-    }
 }

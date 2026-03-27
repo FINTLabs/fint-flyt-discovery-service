@@ -6,19 +6,17 @@ import org.springframework.stereotype.Service
 
 @Service
 class InstanceValueMetadataMappingService {
-    fun toEntity(instanceValueMetadataDto: InstanceValueMetadataDto): InstanceValueMetadata {
-        return InstanceValueMetadata(
+    fun toEntity(instanceValueMetadataDto: InstanceValueMetadataDto): InstanceValueMetadata =
+        InstanceValueMetadata(
             displayName = requireNotNull(instanceValueMetadataDto.displayName),
             type = requireNotNull(instanceValueMetadataDto.type),
             key = requireNotNull(instanceValueMetadataDto.key),
         )
-    }
 
-    fun toDto(instanceValueMetadata: InstanceValueMetadata): InstanceValueMetadataDto {
-        return InstanceValueMetadataDto(
+    fun toDto(instanceValueMetadata: InstanceValueMetadata): InstanceValueMetadataDto =
+        InstanceValueMetadataDto(
             displayName = requireNotNull(instanceValueMetadata.displayName),
             type = requireNotNull(instanceValueMetadata.type),
             key = requireNotNull(instanceValueMetadata.key),
         )
-    }
 }

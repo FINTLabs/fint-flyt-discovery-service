@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 class IntegrationMetadataMappingService(
     private val instanceMetadataContentMappingService: InstanceMetadataContentMappingService,
 ) {
-    fun toEntity(integrationMetadataDto: IntegrationMetadataDto): IntegrationMetadata {
-        return IntegrationMetadata(
+    fun toEntity(integrationMetadataDto: IntegrationMetadataDto): IntegrationMetadata =
+        IntegrationMetadata(
             sourceApplicationId = requireNotNull(integrationMetadataDto.sourceApplicationId),
             sourceApplicationIntegrationId = requireNotNull(integrationMetadataDto.sourceApplicationIntegrationId),
             sourceApplicationIntegrationUri = integrationMetadataDto.sourceApplicationIntegrationUri,
@@ -18,10 +18,9 @@ class IntegrationMetadataMappingService(
             instanceMetadata =
                 integrationMetadataDto.instanceMetadata?.let(instanceMetadataContentMappingService::toEntity),
         )
-    }
 
-    fun toDto(integrationMetadata: IntegrationMetadata): IntegrationMetadataDto {
-        return IntegrationMetadataDto(
+    fun toDto(integrationMetadata: IntegrationMetadata): IntegrationMetadataDto =
+        IntegrationMetadataDto(
             id = integrationMetadata.id,
             sourceApplicationId = requireNotNull(integrationMetadata.sourceApplicationId),
             sourceApplicationIntegrationId = requireNotNull(integrationMetadata.sourceApplicationIntegrationId),
@@ -31,5 +30,4 @@ class IntegrationMetadataMappingService(
             instanceMetadata =
                 integrationMetadata.instanceMetadata?.let(instanceMetadataContentMappingService::toDto),
         )
-    }
 }

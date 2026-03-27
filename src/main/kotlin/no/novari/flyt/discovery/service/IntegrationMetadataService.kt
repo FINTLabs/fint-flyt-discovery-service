@@ -50,42 +50,37 @@ class IntegrationMetadataService(
     fun getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
         sourceApplicationId: Long,
         sourceApplicationIntegrationId: String,
-    ): List<IntegrationMetadataDto> {
-        return integrationMetadataRepository
+    ): List<IntegrationMetadataDto> =
+        integrationMetadataRepository
             .findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
                 sourceApplicationId = sourceApplicationId,
                 sourceApplicationIntegrationId = sourceApplicationIntegrationId,
             ).map(integrationMetadataMappingService::toDto)
-    }
 
-    fun getInstanceMetadataById(id: Long): InstanceMetadataContentDto? {
-        return integrationMetadataRepository
+    fun getInstanceMetadataById(id: Long): InstanceMetadataContentDto? =
+        integrationMetadataRepository
             .findById(id)
             .map(integrationMetadataMappingService::toDto)
             .map(IntegrationMetadataDto::instanceMetadata)
             .orElse(null)
-    }
 
-    fun getById(id: Long): IntegrationMetadataDto? {
-        return integrationMetadataRepository
+    fun getById(id: Long): IntegrationMetadataDto? =
+        integrationMetadataRepository
             .findById(id)
             .map(integrationMetadataMappingService::toDto)
             .orElse(null)
-    }
 
-    fun versionExists(integrationMetadataDto: IntegrationMetadataDto): Boolean {
-        return integrationMetadataRepository.existsBySourceApplicationIdAndSourceApplicationIntegrationIdAndVersion(
+    fun versionExists(integrationMetadataDto: IntegrationMetadataDto): Boolean =
+        integrationMetadataRepository.existsBySourceApplicationIdAndSourceApplicationIntegrationIdAndVersion(
             sourceApplicationId = requireNotNull(integrationMetadataDto.sourceApplicationId),
             sourceApplicationIntegrationId = requireNotNull(integrationMetadataDto.sourceApplicationIntegrationId),
             version = requireNotNull(integrationMetadataDto.version),
         )
-    }
 
-    fun save(integrationMetadataDto: IntegrationMetadataDto): IntegrationMetadataDto {
-        return integrationMetadataMappingService.toDto(
+    fun save(integrationMetadataDto: IntegrationMetadataDto): IntegrationMetadataDto =
+        integrationMetadataMappingService.toDto(
             integrationMetadataRepository.save(
                 integrationMetadataMappingService.toEntity(integrationMetadataDto),
             ),
         )
-    }
 }
