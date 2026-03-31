@@ -10,8 +10,8 @@ spring:
   profiles:
     include:
       - flyt-kafka
+      - flyt-web-resource-server
       - flyt-logging
-      - flyt-resource-server
       - flyt-postgres
 
   output:

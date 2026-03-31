@@ -63,7 +63,7 @@ Key properties:
 | `spring.kafka.bootstrap-servers` | Kafka bootstrap URL (see `application-local-staging.yaml` for localhost defaults). |
 | `spring.datasource.*` | JDBC connection details for Postgres plus Hikari schema selection; secrets provided per environment. |
 | `spring.security.oauth2.resourceserver.jwt.issuer-uri` | OAuth issuer for validating internal API calls. |
-| `novari.flyt.resource-server.security.api.internal.authorized-org-id-role-pairs-json` | Org/role map for internal client authorization (rendered into overlays). |
+| `novari.flyt.web-resource-server.security.api.internal.authorized-org-id-role-pairs-json` | Org/role map for internal client authorization (rendered into overlays). |
 | `spring.jpa.hibernate.ddl-auto` / `spring.flyway.*` | Schema management; Flyway migrations are applied on startup. |
 
 Secrets referenced in overlays must supply database credentials, Kafka access, OAuth issuer/audience, and any internal client auth settings.
@@ -129,5 +129,4 @@ The script rewrites each `kustomization.yaml` with namespace-specific paths, Kaf
 4. Add or update tests to cover new behaviour and edge cases.
 
 FINT Flyt Discovery Service is maintained by the FINT Flyt team. Contact the team via the internal Slack channel or open an issue in this repository for questions or enhancements.
-
 
