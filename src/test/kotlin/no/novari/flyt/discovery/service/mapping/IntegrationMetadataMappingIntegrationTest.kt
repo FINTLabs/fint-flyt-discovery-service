@@ -283,7 +283,7 @@ class IntegrationMetadataMappingIntegrationTest {
     }
 
     @Test
-    fun shouldMapToIntegrationMetadata() {
+    fun `maps dto to integration metadata entity`() {
         val integrationMetadata = integrationMetadataMappingService.toEntity(integrationMetadataDto)
 
         assertEquals(expectedIntegrationMetadata, integrationMetadata)

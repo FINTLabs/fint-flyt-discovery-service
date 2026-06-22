@@ -17,7 +17,7 @@ class ValidationErrorsFormattingServiceTest {
     }
 
     @Test
-    fun formatWithSingleErrorFormatsCorrectly() {
+    fun `formats a single validation error`() {
         val errors = hashSetOf(createConstraintViolation("field1", "error message 1"))
 
         val result = service.format(errors)
@@ -26,7 +26,7 @@ class ValidationErrorsFormattingServiceTest {
     }
 
     @Test
-    fun formatWithMultipleErrorsFormatsAndSortsCorrectly() {
+    fun `formats and sorts multiple validation errors`() {
         val errors =
             hashSetOf(
                 createConstraintViolation("field2", "error message 2"),
@@ -39,7 +39,7 @@ class ValidationErrorsFormattingServiceTest {
     }
 
     @Test
-    fun formatWithBlankFieldFormatsCorrectly() {
+    fun `formats a validation error with a blank field`() {
         val errors = hashSetOf(createConstraintViolation("", "error message 1"))
 
         val result = service.format(errors)
