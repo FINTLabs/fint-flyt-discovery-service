@@ -1,21 +1,39 @@
 package no.novari.flyt.discovery.service
 
+import no.novari.flyt.audit.actor.Actor
 import no.novari.flyt.discovery.service.model.entities.IntegrationMetadata
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.annotation.DirtiesContext
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
-@DataJpaTest(properties = ["spring.jpa.hibernate.ddl-auto=none"])
-@DirtiesContext
+@DataJpaTest(
+    properties = [
+        "spring.jpa.hibernate.ddl-auto=none",
+        "spring.datasource.hikari.schema=public",
+    ],
+)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Testcontainers
 class IntegrationMetadataRepositoryTest {
+    @TestConfiguration
+    @EnableJpaAuditing(auditorAwareRef = "flytAuditorAware")
+    class JpaAuditingTestConfig
+
     @Autowired
     private lateinit var integrationMetadataRepository: IntegrationMetadataRepository
 
     @Test
-    fun shouldReturnEmptyCollectionWhenSourceApplicationHasNoEntities() {
+    fun `returns empty collection when source application has no entities`() {
         integrationMetadataRepository.save(createIntegrationMetadata(2L, "TEST-1", 1L))
 
         val result = integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(1L)
@@ -24,7 +42,7 @@ class IntegrationMetadataRepositoryTest {
     }
 
     @Test
-    fun shouldReturnLatestVersionsForSourceApplication() {
+    fun `returns only latest versions for a source application`() {
         integrationMetadataRepository.saveAll(
             listOf(
                 createIntegrationMetadata(1L, "TEST-1", 1L),
@@ -46,7 +64,7 @@ class IntegrationMetadataRepositoryTest {
     }
 
     @Test
-    fun shouldReturnLatestVersionsForSourceApplications() {
+    fun `returns only latest versions for multiple source applications`() {
         integrationMetadataRepository.saveAll(
             listOf(
                 createIntegrationMetadata(1L, "TEST-1", 1L),
@@ -78,6 +96,14 @@ class IntegrationMetadataRepositoryTest {
         assertEquals(3L, resultList[2].version)
     }
 
+    @Test
+    fun `populates createdAt and createdBy on save`() {
+        val saved = integrationMetadataRepository.saveAndFlush(createIntegrationMetadata(1L, "TEST-1", 1L))
+
+        assertEquals(Actor.System, saved.createdBy)
+        assertNotNull(saved.createdAt)
+    }
+
     private fun createIntegrationMetadata(
         sourceApplicationId: Long,
         sourceApplicationIntegrationId: String,
@@ -89,4 +115,11 @@ class IntegrationMetadataRepositoryTest {
             version = version,
             integrationDisplayName = "displayName",
         )
+
+    companion object {
+        @Container
+        @ServiceConnection
+        @JvmStatic
+        val postgres: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:17-alpine")
+    }
 }

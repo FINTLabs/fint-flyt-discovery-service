@@ -29,5 +29,7 @@ class IntegrationMetadataMappingService(
             version = requireNotNull(integrationMetadata.version),
             instanceMetadata =
                 integrationMetadata.instanceMetadata?.let(instanceMetadataContentMappingService::toDto),
+            createdAt = integrationMetadata.createdAt,
+            createdBy = integrationMetadata.createdBy,
         )
 }

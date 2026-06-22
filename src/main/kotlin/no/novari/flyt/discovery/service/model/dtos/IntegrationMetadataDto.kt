@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
+import no.novari.flyt.audit.actor.Actor
+import java.time.Instant
 
 data class IntegrationMetadataDto(
     @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -19,4 +21,8 @@ data class IntegrationMetadataDto(
     var version: Long? = null,
     @field:Valid
     val instanceMetadata: InstanceMetadataContentDto? = null,
+    @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    val createdAt: Instant? = null,
+    @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    val createdBy: Actor? = null,
 )
