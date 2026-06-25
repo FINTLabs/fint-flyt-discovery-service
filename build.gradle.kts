@@ -40,7 +40,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("no.novari:flyt-web-resource-server:2.0.0")
-    implementation("no.novari:flyt-audit-starter:1.0.0-rc-3")
+    implementation("no.novari:flyt-audit-starter:1.0.0-rc-4")
     implementation("org.flywaydb:flyway-core")
     implementation("no.novari:kafka:5.0.0")
     implementation("org.flywaydb:flyway-database-postgresql")
