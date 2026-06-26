@@ -29,6 +29,8 @@ spec:
   ingress:
     enabled: true
     basePath: path
+    middlewares:
+      - fint-flyt-auth-forward-sso
   env:
     - name: JAVA_TOOL_OPTIONS
       value: '-XX:+ExitOnOutOfMemoryError -Xmx1840M'
