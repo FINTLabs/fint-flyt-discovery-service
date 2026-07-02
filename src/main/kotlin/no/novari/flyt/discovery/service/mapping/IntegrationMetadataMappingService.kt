@@ -1,5 +1,6 @@
 package no.novari.flyt.discovery.service.mapping
 
+import no.novari.flyt.audit.actor.ActorDisplayResolver
 import no.novari.flyt.discovery.service.model.dtos.IntegrationMetadataDto
 import no.novari.flyt.discovery.service.model.entities.IntegrationMetadata
 import org.springframework.stereotype.Service
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class IntegrationMetadataMappingService(
     private val instanceMetadataContentMappingService: InstanceMetadataContentMappingService,
+    private val actorDisplayResolver: ActorDisplayResolver,
 ) {
     fun toEntity(integrationMetadataDto: IntegrationMetadataDto): IntegrationMetadata =
         IntegrationMetadata(
@@ -20,6 +22,17 @@ class IntegrationMetadataMappingService(
         )
 
     fun toDto(integrationMetadata: IntegrationMetadata): IntegrationMetadataDto =
+        toDto(integrationMetadata, actorDisplayResolver.resolve(integrationMetadata.createdBy))
+
+    fun toDtos(integrationMetadataList: List<IntegrationMetadata>): List<IntegrationMetadataDto> {
+        val displays = actorDisplayResolver.resolveAll(integrationMetadataList.map { it.createdBy })
+        return integrationMetadataList.map { toDto(it, displays[it.createdBy]) }
+    }
+
+    private fun toDto(
+        integrationMetadata: IntegrationMetadata,
+        createdByDisplay: String?,
+    ): IntegrationMetadataDto =
         IntegrationMetadataDto(
             id = integrationMetadata.id,
             sourceApplicationId = requireNotNull(integrationMetadata.sourceApplicationId),
@@ -29,5 +42,8 @@ class IntegrationMetadataMappingService(
             version = requireNotNull(integrationMetadata.version),
             instanceMetadata =
                 integrationMetadata.instanceMetadata?.let(instanceMetadataContentMappingService::toDto),
+            createdAt = integrationMetadata.createdAt,
+            createdBy = createdByDisplay,
+            createdByActor = integrationMetadata.createdBy,
         )
 }

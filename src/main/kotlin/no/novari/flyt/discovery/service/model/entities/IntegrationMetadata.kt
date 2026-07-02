@@ -11,6 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
+import no.novari.flyt.audit.entity.CreatedAuditedEntity
 
 @Entity
 @Table(
@@ -38,7 +39,7 @@ class IntegrationMetadata(
     @field:OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     @field:JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var instanceMetadata: InstanceMetadataContent? = null,
-) {
+) : CreatedAuditedEntity() {
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

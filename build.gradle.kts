@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.5.15"
+    id("org.springframework.boot") version "3.5.16"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
@@ -40,6 +40,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("no.novari:flyt-web-resource-server:3.1.0")
+    implementation("no.novari:flyt-audit-starter:1.0.0-rc-10")
 
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
@@ -54,6 +55,9 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
     testImplementation("org.springframework.security:spring-security-core")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.2.3")
 }

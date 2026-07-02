@@ -56,7 +56,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldReturnBadRequestOnGetIntegrationMetadataForSourceApplication() {
+    fun `returns bad request when source application lookup has conflicting parameters`() {
         val response: ResponseEntity<Collection<IntegrationMetadata>> =
             controller.getIntegrationMetadataForSourceApplication()
 
@@ -64,7 +64,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldReturnHttp200IfIntegrationMetadataIsFound() {
+    fun `returns 200 when integration metadata is found for a source application`() {
         val dto = validIntegrationMetadataDto()
         whenever(integrationMetadataService.getIntegrationMetadataForSourceApplication(1L, false))
             .thenReturn(listOf(dto))
@@ -77,7 +77,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldReturnHttp200IfIntegrationMetadataIsFoundForSourceApplications() {
+    fun `returns 200 when integration metadata is found for multiple source applications`() {
         val dto = validIntegrationMetadataDto()
         val sourceApplicationIds = listOf(1L, 2L)
         whenever(integrationMetadataService.getIntegrationMetadataForSourceApplications(sourceApplicationIds, false))
@@ -105,7 +105,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadata() {
+    fun `throws forbidden when user lacks access to a source application`() {
         doThrow(
             ResponseStatusException(
                 HttpStatus.FORBIDDEN,
@@ -126,7 +126,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataForSourceApplications() {
+    fun `throws forbidden when user lacks access to one of several source applications`() {
         doThrow(
             ResponseStatusException(
                 HttpStatus.FORBIDDEN,
@@ -147,7 +147,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldReturnHttp200ForIntegrationLookupByApplicationAndIntegrationId() {
+    fun `returns 200 for integration lookup by application and integration id`() {
         val dto = validIntegrationMetadataDto()
         whenever(
             integrationMetadataService.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
@@ -164,7 +164,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldThrowForbiddenForIntegrationLookupWithoutAccess() {
+    fun `throws forbidden for integration lookup without access`() {
         doThrow(
             ResponseStatusException(
                 HttpStatus.FORBIDDEN,
@@ -185,7 +185,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldReturnHttp200IfInstanceMetadataContentIsFound() {
+    fun `returns 200 when instance metadata content is found`() {
         val instanceMetadataContentDto = InstanceMetadataContentDto()
         val integrationMetadataDto =
             validIntegrationMetadataDto(
@@ -201,7 +201,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldThrowNotFoundWhenInstanceMetadataLookupUsesInvalidId() {
+    fun `throws not found when instance metadata lookup uses an invalid id`() {
         whenever(integrationMetadataService.getById(1L)).thenReturn(null)
 
         assertThrows(ResponseStatusException::class.java) {
@@ -210,7 +210,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldThrowExceptionForbiddenIfUserDontHaveAccessToInstanceMetadataContent() {
+    fun `throws forbidden when user lacks access to instance metadata content`() {
         val metadataId = 1L
         doThrow(
             ResponseStatusException(
@@ -235,7 +235,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldReturnResponseStatusExceptionIfPostHasValidationErrors() {
+    fun `throws exception when post has validation errors`() {
         val dto = validIntegrationMetadataDto()
 
         @Suppress("UNCHECKED_CAST")
@@ -250,7 +250,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldThrowExceptionForbiddenIfUserDontHaveAccessToIntegrationMetadataOnPost() {
+    fun `throws forbidden when user lacks access on post`() {
         val integrationMetadataDto = validIntegrationMetadataDto(sourceApplicationId = 1L)
         whenever(validator.validate(integrationMetadataDto)).thenReturn(emptySet())
         doThrow(
@@ -273,7 +273,7 @@ class IntegrationMetadataControllerTest {
     }
 
     @Test
-    fun shouldPostIntegrationMetadataWithNoErrors() {
+    fun `posts integration metadata successfully when there are no errors`() {
         val integrationMetadataDto = validIntegrationMetadataDto()
         whenever(validator.validate(integrationMetadataDto)).thenReturn(emptySet())
         whenever(integrationMetadataService.versionExists(integrationMetadataDto)).thenReturn(false)

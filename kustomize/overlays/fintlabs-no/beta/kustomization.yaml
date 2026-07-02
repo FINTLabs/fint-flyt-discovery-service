@@ -21,6 +21,8 @@ patches:
       - op: replace
         path: "/spec/ingress/basePath"
         value: "/beta/fintlabs-no/api/intern/metadata"
+      - op: remove
+        path: "/spec/ingress/middlewares"
       - op: add
         path: "/spec/env/-"
         value:
