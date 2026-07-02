@@ -24,5 +24,7 @@ data class IntegrationMetadataDto(
     @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
     val createdAt: Instant? = null,
     @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    val createdBy: Actor? = null,
+    val createdBy: String? = null,
+    @field:JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    val createdByActor: Actor? = null,
 )

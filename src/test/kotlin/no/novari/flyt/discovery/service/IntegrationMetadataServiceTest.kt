@@ -43,7 +43,7 @@ class IntegrationMetadataServiceTest {
     fun `gets integration metadata for a source application with only latest versions`() {
         whenever(integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplication(sourceApplicationId, true)
 
@@ -55,7 +55,7 @@ class IntegrationMetadataServiceTest {
     fun `gets all integration metadata for a source application`() {
         whenever(integrationMetadataRepository.findAllBySourceApplicationId(sourceApplicationId))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplication(sourceApplicationId, false)
 
@@ -68,7 +68,7 @@ class IntegrationMetadataServiceTest {
         val sourceApplicationIds = listOf(1L, 2L)
         whenever(integrationMetadataRepository.findAllWithLatestVersionsForSourceApplications(sourceApplicationIds))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplications(sourceApplicationIds, true)
 
@@ -83,7 +83,7 @@ class IntegrationMetadataServiceTest {
         val sourceApplicationIds = listOf(1L, 2L)
         whenever(integrationMetadataRepository.findAllBySourceApplicationIdIn(sourceApplicationIds))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplications(sourceApplicationIds, false)
 
@@ -109,7 +109,7 @@ class IntegrationMetadataServiceTest {
                 integrationId,
             ),
         ).thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result =
             service.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
