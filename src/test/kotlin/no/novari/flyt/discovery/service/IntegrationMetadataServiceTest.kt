@@ -40,10 +40,10 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetIntegrationMetadataForSourceApplicationWithLatestVersions() {
+    fun `gets integration metadata for a source application with only latest versions`() {
         whenever(integrationMetadataRepository.findAllWithLatestVersionsForSourceApplication(sourceApplicationId))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplication(sourceApplicationId, true)
 
@@ -52,10 +52,10 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetIntegrationMetadataForSourceApplicationWithoutLatestVersions() {
+    fun `gets all integration metadata for a source application`() {
         whenever(integrationMetadataRepository.findAllBySourceApplicationId(sourceApplicationId))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplication(sourceApplicationId, false)
 
@@ -64,11 +64,11 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetIntegrationMetadataForSourceApplicationsWithLatestVersions() {
+    fun `gets integration metadata for multiple source applications with only latest versions`() {
         val sourceApplicationIds = listOf(1L, 2L)
         whenever(integrationMetadataRepository.findAllWithLatestVersionsForSourceApplications(sourceApplicationIds))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplications(sourceApplicationIds, true)
 
@@ -79,11 +79,11 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetIntegrationMetadataForSourceApplicationsWithoutLatestVersions() {
+    fun `gets all integration metadata for multiple source applications`() {
         val sourceApplicationIds = listOf(1L, 2L)
         whenever(integrationMetadataRepository.findAllBySourceApplicationIdIn(sourceApplicationIds))
             .thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result = service.getIntegrationMetadataForSourceApplications(sourceApplicationIds, false)
 
@@ -94,14 +94,14 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetIntegrationMetadataForSourceApplicationsWithEmptyInput() {
+    fun `returns empty map for empty source application input`() {
         val result = service.getIntegrationMetadataForSourceApplications(emptyList(), false)
 
         assertTrue(result.isEmpty())
     }
 
     @Test
-    fun testGetAllForSourceApplicationIdAndSourceApplicationIntegrationId() {
+    fun `gets all integration metadata for a source application and integration id`() {
         val integrationId = "integrationId"
         whenever(
             integrationMetadataRepository.findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
@@ -109,7 +109,7 @@ class IntegrationMetadataServiceTest {
                 integrationId,
             ),
         ).thenReturn(listOf(entity))
-        whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
+        whenever(integrationMetadataMappingService.toDtos(listOf(entity))).thenReturn(listOf(dto))
 
         val result =
             service.getAllForSourceApplicationIdAndSourceApplicationIntegrationId(
@@ -122,7 +122,7 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetInstanceMetadataById() {
+    fun `gets instance metadata by id`() {
         val id = 1L
         val instanceDto = InstanceMetadataContentDto()
         val dtoWithInstanceMetadata = validIntegrationMetadataDto(instanceMetadata = instanceDto)
@@ -135,7 +135,7 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetInstanceMetadataByIdWhenEntityDoesNotExist() {
+    fun `returns null instance metadata when entity does not exist`() {
         whenever(integrationMetadataRepository.findById(1L)).thenReturn(java.util.Optional.empty())
 
         val result = service.getInstanceMetadataById(1L)
@@ -144,7 +144,7 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testGetById() {
+    fun `gets integration metadata by id`() {
         whenever(integrationMetadataRepository.findById(1L)).thenReturn(java.util.Optional.of(entity))
         whenever(integrationMetadataMappingService.toDto(entity)).thenReturn(dto)
 
@@ -154,7 +154,7 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testVersionExists() {
+    fun `checks whether a version already exists`() {
         whenever(
             integrationMetadataRepository.existsBySourceApplicationIdAndSourceApplicationIntegrationIdAndVersion(
                 sourceApplicationId,
@@ -169,7 +169,7 @@ class IntegrationMetadataServiceTest {
     }
 
     @Test
-    fun testSave() {
+    fun `saves integration metadata`() {
         val savedDto = validIntegrationMetadataDto(version = 2L)
         whenever(integrationMetadataMappingService.toEntity(dto)).thenReturn(entity)
         whenever(integrationMetadataRepository.save(entity)).thenReturn(entity)

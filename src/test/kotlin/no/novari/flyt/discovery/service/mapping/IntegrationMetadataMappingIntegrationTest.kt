@@ -1,5 +1,8 @@
 package no.novari.flyt.discovery.service.mapping
 
+import no.novari.flyt.audit.actor.ActorDisplayProperties
+import no.novari.flyt.audit.actor.ActorDisplayResolver
+import no.novari.flyt.audit.actor.ActorNameLookup
 import no.novari.flyt.discovery.service.model.dtos.InstanceMetadataCategoryDto
 import no.novari.flyt.discovery.service.model.dtos.InstanceMetadataContentDto
 import no.novari.flyt.discovery.service.model.dtos.InstanceObjectCollectionMetadataDto
@@ -15,6 +18,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.context.annotation.Bean
 
 @SpringBootTest(
     classes = [
@@ -23,9 +28,19 @@ import org.springframework.boot.test.context.SpringBootTest
         InstanceValueMetadataMappingService::class,
         InstanceObjectCollectionMetadataMappingService::class,
         InstanceMetadataCategoryMappingService::class,
+        IntegrationMetadataMappingIntegrationTest.TestConfig::class,
     ],
 )
 class IntegrationMetadataMappingIntegrationTest {
+    @TestConfiguration
+    class TestConfig {
+        @Bean
+        fun actorNameLookup(): ActorNameLookup = ActorNameLookup { emptyMap() }
+
+        @Bean
+        fun actorDisplayResolver(lookup: ActorNameLookup) = ActorDisplayResolver(lookup, ActorDisplayProperties())
+    }
+
     @Autowired
     private lateinit var integrationMetadataMappingService: IntegrationMetadataMappingService
 
@@ -283,7 +298,7 @@ class IntegrationMetadataMappingIntegrationTest {
     }
 
     @Test
-    fun shouldMapToIntegrationMetadata() {
+    fun `maps dto to integration metadata entity`() {
         val integrationMetadata = integrationMetadataMappingService.toEntity(integrationMetadataDto)
 
         assertEquals(expectedIntegrationMetadata, integrationMetadata)

@@ -8,6 +8,7 @@ import no.novari.flyt.discovery.service.model.entities.IntegrationMetadata
 import no.novari.flyt.discovery.service.validation.ValidationErrorsFormattingService
 import no.novari.flyt.webresourceserver.UrlPaths.INTERNAL_API
 import no.novari.flyt.webresourceserver.security.user.UserAuthorizationService
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -114,9 +115,18 @@ class IntegrationMetadataController(
                 integrationMetadataDto,
             )
         if (constraintViolations.isNotEmpty()) {
+            val formattedErrors = validationErrorsFormattingService.format(constraintViolations)
+            logger.warn(
+                "Rejected integration metadata request because validation failed. " +
+                    "sourceApplicationId={}, sourceApplicationIntegrationId={}, version={}, errors={}",
+                integrationMetadataDto.sourceApplicationId,
+                integrationMetadataDto.sourceApplicationIntegrationId,
+                integrationMetadataDto.version,
+                formattedErrors,
+            )
             throw ResponseStatusException(
                 HttpStatus.UNPROCESSABLE_ENTITY,
-                validationErrorsFormattingService.format(constraintViolations),
+                formattedErrors,
             )
         }
 
@@ -131,5 +141,9 @@ class IntegrationMetadataController(
 
         integrationMetadataService.save(integrationMetadataDto)
         return ResponseEntity.ok().build()
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(IntegrationMetadataController::class.java)
     }
 }

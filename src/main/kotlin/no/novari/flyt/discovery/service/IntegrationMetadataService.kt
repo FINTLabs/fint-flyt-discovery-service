@@ -21,7 +21,7 @@ class IntegrationMetadataService(
                 integrationMetadataRepository.findAllBySourceApplicationId(sourceApplicationId)
             }
 
-        return entities.map(integrationMetadataMappingService::toDto)
+        return integrationMetadataMappingService.toDtos(entities)
     }
 
     fun getIntegrationMetadataForSourceApplications(
@@ -32,14 +32,15 @@ class IntegrationMetadataService(
             return emptyMap()
         }
 
+        val entities =
+            if (onlyLatestVersions) {
+                integrationMetadataRepository.findAllWithLatestVersionsForSourceApplications(sourceApplicationIds)
+            } else {
+                integrationMetadataRepository.findAllBySourceApplicationIdIn(sourceApplicationIds)
+            }
         val grouped =
-            (
-                if (onlyLatestVersions) {
-                    integrationMetadataRepository.findAllWithLatestVersionsForSourceApplications(sourceApplicationIds)
-                } else {
-                    integrationMetadataRepository.findAllBySourceApplicationIdIn(sourceApplicationIds)
-                }
-            ).map(integrationMetadataMappingService::toDto)
+            integrationMetadataMappingService
+                .toDtos(entities)
                 .groupBy { requireNotNull(it.sourceApplicationId) }
 
         return sourceApplicationIds.associateWith { sourceApplicationId ->
@@ -51,11 +52,12 @@ class IntegrationMetadataService(
         sourceApplicationId: Long,
         sourceApplicationIntegrationId: String,
     ): List<IntegrationMetadataDto> =
-        integrationMetadataRepository
-            .findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
+        integrationMetadataMappingService.toDtos(
+            integrationMetadataRepository.findAllBySourceApplicationIdAndSourceApplicationIntegrationId(
                 sourceApplicationId = sourceApplicationId,
                 sourceApplicationIntegrationId = sourceApplicationIntegrationId,
-            ).map(integrationMetadataMappingService::toDto)
+            ),
+        )
 
     fun getInstanceMetadataById(id: Long): InstanceMetadataContentDto? =
         integrationMetadataRepository
