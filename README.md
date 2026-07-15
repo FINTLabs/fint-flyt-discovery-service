@@ -35,7 +35,8 @@ Base path: `/api/intern/metadata`
 | `GET` | `/{metadataId}/instans-metadata` | Fetch the instance metadata content for a given integration metadata ID. | – | `200 OK` with `InstanceMetadataContentDto`; `404` when missing; `403` if unauthorized. |
 | `POST` | `/` | Publish a new integration metadata version. | `IntegrationMetadataDto` (validated; must be a unique version per source application/integration). | `200 OK` on success; `409` if version exists; `422` on validation errors. |
 
-All endpoints are secured; `UserAuthorizationService` checks the caller’s access to the referenced `sourceApplicationId` and returns `403 Forbidden` when claims do not permit access.
+All endpoints are secured. `UserAuthorizationService` checks the caller’s access to the referenced
+`sourceApplicationId` through authorization-service and returns `403 Forbidden` when access is denied.
 
 ## Kafka Integration
 
@@ -51,7 +52,8 @@ No scheduled jobs run in this service; it reacts to Kafka events and HTTP reques
 
 ## Configuration
 
-The application layers on the shared Spring profiles `flyt-kafka`, `flyt-logging`, `flyt-resource-server`, and `flyt-postgres`.
+The application layers on the shared Spring profiles `flyt-kafka`, `flyt-logging`, `flyt-web-resource-server`,
+`flyt-authorization-client`, and `flyt-postgres`.
 
 Key properties:
 
@@ -63,6 +65,7 @@ Key properties:
 | `spring.kafka.bootstrap-servers` | Kafka bootstrap URL (see `application-local-staging.yaml` for localhost defaults). |
 | `spring.datasource.*` | JDBC connection details for Postgres plus Hikari schema selection; secrets provided per environment. |
 | `spring.security.oauth2.resourceserver.jwt.issuer-uri` | OAuth issuer for validating internal API calls. |
+| `fint.flyt.authorization.sso.client-id` / `fint.flyt.authorization.sso.client-secret` | OAuth2 client credentials for calls to authorization-service. |
 | `novari.flyt.web-resource-server.security.api.internal.authorized-org-id-role-pairs-json` | Org/role map for internal client authorization (rendered into overlays). |
 | `spring.jpa.hibernate.ddl-auto` / `spring.flyway.*` | Schema management; Flyway migrations are applied on startup. |
 
@@ -106,7 +109,7 @@ The script rewrites each `kustomization.yaml` with namespace-specific paths, Kaf
 ## Security
 
 - Runs as an OAuth2 resource server validating JWTs from `spring.security.oauth2.resourceserver.jwt.issuer-uri`.
-- Internal APIs are enabled via the shared `flyt-resource-server` profile and gated by `UserAuthorizationService`, which checks caller access to the requested `sourceApplicationId`.
+- Internal APIs are enabled via the shared `flyt-web-resource-server` profile and gated by `UserAuthorizationService`, which checks caller access to the requested `sourceApplicationId` over OAuth2-protected HTTP.
 
 ## Observability & Operations
 
@@ -129,4 +132,3 @@ The script rewrites each `kustomization.yaml` with namespace-specific paths, Kaf
 4. Add or update tests to cover new behaviour and edge cases.
 
 FINT Flyt Discovery Service is maintained by the FINT Flyt team. Contact the team via the internal Slack channel or open an issue in this repository for questions or enhancements.
-

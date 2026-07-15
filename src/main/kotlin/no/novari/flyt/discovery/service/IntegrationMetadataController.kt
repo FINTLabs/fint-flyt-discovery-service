@@ -58,8 +58,14 @@ class IntegrationMetadataController(
         @RequestParam(name = "kildeapplikasjonIds") sourceApplicationIds: Collection<Long>,
         @RequestParam(name = "bareSisteVersjoner", required = false) onlyLatestVersions: Boolean?,
     ): ResponseEntity<Map<Long, Collection<IntegrationMetadataDto>>> {
-        sourceApplicationIds.forEach { sourceApplicationId ->
-            userAuthorizationService.checkIfUserHasAccessToSourceApplication(authentication, sourceApplicationId)
+        val requestedSourceApplicationIds = sourceApplicationIds.toSet()
+        val authorizedSourceApplicationIds =
+            userAuthorizationService.getUserAuthorizedSourceApplicationIds(
+                authentication,
+                requestedSourceApplicationIds,
+            )
+        if (!authorizedSourceApplicationIds.containsAll(requestedSourceApplicationIds)) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN)
         }
 
         val integrationMetadata =

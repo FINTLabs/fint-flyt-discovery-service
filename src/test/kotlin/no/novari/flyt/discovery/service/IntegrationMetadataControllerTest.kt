@@ -17,7 +17,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.HttpStatus
@@ -80,6 +79,13 @@ class IntegrationMetadataControllerTest {
     fun `returns 200 when integration metadata is found for multiple source applications`() {
         val dto = validIntegrationMetadataDto()
         val sourceApplicationIds = listOf(1L, 2L)
+        val requestedSourceApplicationIds = setOf(1L, 2L)
+        whenever(
+            userAuthorizationService.getUserAuthorizedSourceApplicationIds(
+                authentication,
+                requestedSourceApplicationIds,
+            ),
+        ).thenReturn(requestedSourceApplicationIds)
         whenever(integrationMetadataService.getIntegrationMetadataForSourceApplications(sourceApplicationIds, false))
             .thenReturn(
                 mapOf(
@@ -95,8 +101,10 @@ class IntegrationMetadataControllerTest {
                 null,
             )
 
-        verify(userAuthorizationService, times(1)).checkIfUserHasAccessToSourceApplication(authentication, 1L)
-        verify(userAuthorizationService, times(1)).checkIfUserHasAccessToSourceApplication(authentication, 2L)
+        verify(userAuthorizationService).getUserAuthorizedSourceApplicationIds(
+            authentication,
+            requestedSourceApplicationIds,
+        )
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)
         assertEquals(2, response.body?.size)
@@ -127,12 +135,13 @@ class IntegrationMetadataControllerTest {
 
     @Test
     fun `throws forbidden when user lacks access to one of several source applications`() {
-        doThrow(
-            ResponseStatusException(
-                HttpStatus.FORBIDDEN,
-                "You do not have permission to access or modify data that is related to source application with id=2",
+        val requestedSourceApplicationIds = setOf(1L, 2L)
+        whenever(
+            userAuthorizationService.getUserAuthorizedSourceApplicationIds(
+                authentication,
+                requestedSourceApplicationIds,
             ),
-        ).whenever(userAuthorizationService).checkIfUserHasAccessToSourceApplication(authentication, 2L)
+        ).thenReturn(setOf(1L))
 
         val exception =
             assertThrows(ResponseStatusException::class.java) {
@@ -140,9 +149,9 @@ class IntegrationMetadataControllerTest {
             }
 
         assertEquals(HttpStatus.FORBIDDEN, exception.statusCode)
-        assertEquals(
-            "You do not have permission to access or modify data that is related to source application with id=2",
-            exception.reason,
+        verify(userAuthorizationService).getUserAuthorizedSourceApplicationIds(
+            authentication,
+            requestedSourceApplicationIds,
         )
     }
 
