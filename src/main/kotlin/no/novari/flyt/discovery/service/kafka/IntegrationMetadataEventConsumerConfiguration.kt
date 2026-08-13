@@ -1,5 +1,6 @@
 package no.novari.flyt.discovery.service.kafka
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.novari.flyt.discovery.service.IntegrationMetadataRepository
 import no.novari.flyt.discovery.service.model.entities.IntegrationMetadata
 import no.novari.kafka.consuming.ErrorHandlerConfiguration
@@ -11,7 +12,6 @@ import no.novari.kafka.topic.configuration.EventCleanupFrequency
 import no.novari.kafka.topic.configuration.EventTopicConfiguration
 import no.novari.kafka.topic.name.EventTopicNameParameters
 import no.novari.kafka.topic.name.TopicNamePrefixParameters
-import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer
@@ -68,13 +68,12 @@ class IntegrationMetadataEventConsumerConfiguration {
                     if (!exists) {
                         integrationMetadataRepository.save(integrationMetadata)
                     } else {
-                        logger.warn(
-                            "Ignored metadata with sourceApplicationId={}, " +
-                                "sourceApplicationIntegrationId={} and version={} because it already exists",
-                            sourceApplicationId,
-                            sourceApplicationIntegrationId,
-                            version,
-                        )
+                        log.atWarn {
+                            message =
+                                "Ignored metadata with sourceApplicationId={}, " +
+                                "sourceApplicationIntegrationId={} and version={} because it already exists"
+                            arguments = arrayOf(sourceApplicationId, sourceApplicationIntegrationId, version)
+                        }
                     }
                 },
                 ListenerConfiguration
@@ -95,7 +94,7 @@ class IntegrationMetadataEventConsumerConfiguration {
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(IntegrationMetadataEventConsumerConfiguration::class.java)
+        private val log = KotlinLogging.logger {}
         private const val PARTITIONS = 1
         private val RETENTION_TIME: Duration = Duration.ofDays(7)
     }

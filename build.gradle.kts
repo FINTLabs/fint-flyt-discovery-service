@@ -39,14 +39,17 @@ dependencies {
     compileOnly("org.springframework.security:spring-security-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
 
-    implementation("no.novari:flyt-web-resource-server:4.0.0")
+    implementation("no.novari:flyt-web-resource-server:4.1.0-rc-2")
     implementation("no.novari:flyt-audit-starter:1.0.0")
+    implementation("no.novari:telemetry-starter:0.0.4")
 
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
 
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:9.0")
     runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("com.h2database:h2")
 

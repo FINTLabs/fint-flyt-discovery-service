@@ -7,7 +7,7 @@ resources:
 
 labels:
   - pairs:
-      app.kubernetes.io/instance: fint-flyt-discovery-service_bym-oslo-kommune-no
+      app.kubernetes.io/instance: fint-flyt-discovery-service_bym_oslo_kommune_no
       fintlabs.no/org-id: bym.oslo.kommune.no
 
 patches:
@@ -39,6 +39,12 @@ patches:
         value:
           name: "novari.kafka.topic.orgId"
           value: "bym-oslo-kommune-no"
+      - op: add
+        path: "/spec/env/-"
+        value:
+          name: "novari.telemetry.org-id"
+          value: "bym.oslo.kommune.no"
+
       - op: add
         path: "/spec/env/-"
         value:
