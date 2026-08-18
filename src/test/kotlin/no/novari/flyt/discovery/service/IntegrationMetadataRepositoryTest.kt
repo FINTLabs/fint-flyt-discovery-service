@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -102,6 +104,23 @@ class IntegrationMetadataRepositoryTest {
 
         assertEquals(Actor.System, saved.createdBy)
         assertNotNull(saved.createdAt)
+    }
+
+    @Test
+    fun `rejects a second entity with the same source application, integration and version`() {
+        integrationMetadataRepository.saveAndFlush(createIntegrationMetadata(1L, "TEST-1", 1L))
+
+        assertThrows<DataIntegrityViolationException> {
+            integrationMetadataRepository.saveAndFlush(createIntegrationMetadata(1L, "TEST-1", 1L))
+        }
+    }
+
+    @Test
+    fun `allows the same source application and integration with a different version`() {
+        integrationMetadataRepository.saveAndFlush(createIntegrationMetadata(1L, "TEST-1", 1L))
+        integrationMetadataRepository.saveAndFlush(createIntegrationMetadata(1L, "TEST-1", 2L))
+
+        assertEquals(2, integrationMetadataRepository.count())
     }
 
     private fun createIntegrationMetadata(
