@@ -4,20 +4,17 @@ updates:
       directory: "/"
       schedule:
           interval: weekly
-          day: monday
+          day: wednesday
           time: "04:30"
           timezone: "Europe/Oslo"
       open-pull-requests-limit: 10
-      labels:
-          - dependencies
-          - backend
       groups:
           spring:
               patterns:
                   - "org.springframework*"
           kotlin:
               patterns:
-                  - "org.jetbrains.kotlin*"
+                  - "*kotlin*"
           minor-and-patch:
               patterns:
                   - "*"
@@ -28,13 +25,3 @@ updates:
           - dependency-name: "org.springframework*"
             update-types:
                 - "version-update:semver-major"
-    - package-ecosystem: github-actions
-      directory: "/"
-      schedule:
-          interval: weekly
-          day: monday
-          time: "04:30"
-          timezone: "Europe/Oslo"
-      labels:
-          - dependencies
-          - github-actions
