@@ -75,9 +75,12 @@ class IntegrationMetadataEventIdempotencyIntegrationTest {
 
     private lateinit var skippedEventAppender: ListAppender<ILoggingEvent>
 
+    private var catalogServiceConsumer: ConcurrentMessageListenerContainer<String, IntegrationMetadata>? = null
+
     @BeforeEach
     fun setUp() {
         discoveryServiceConsumer.stop()
+        catalogServiceConsumer = null
         integrationMetadataRepository.deleteAll()
 
         skippedEventAppender =
@@ -87,8 +90,9 @@ class IntegrationMetadataEventIdempotencyIntegrationTest {
 
     @AfterEach
     fun tearDown() {
-        handlerLogger().detachAppender(skippedEventAppender)
+        catalogServiceConsumer?.stop()
         discoveryServiceConsumer.stop()
+        handlerLogger().detachAppender(skippedEventAppender)
     }
 
     @Test
@@ -103,7 +107,7 @@ class IntegrationMetadataEventIdempotencyIntegrationTest {
         publish(version = 3)
         publish(version = 4)
 
-        val catalogServiceConsumer = createCatalogServiceConsumer()
+        val catalogServiceConsumer = createAndRegisterCatalogConsumer()
         catalogServiceConsumer.start()
 
         awaitStoredVersions(1, 2, 3, 4)
@@ -121,7 +125,12 @@ class IntegrationMetadataEventIdempotencyIntegrationTest {
         assertThat(skippedVersions()).containsExactlyInAnyOrder(3L, 4L)
     }
 
-    private fun createCatalogServiceConsumer(): ConcurrentMessageListenerContainer<String, IntegrationMetadata> =
+    /**
+     * Containeren opprettes utenfor Spring-konteksten, så ingenting stopper den automatisk.
+     * Den registreres derfor for opprydding i [tearDown]: feiler testen mellom start og stop,
+     * ville en kjørende consumer ellers blitt stående og forstyrret påfølgende tester.
+     */
+    private fun createAndRegisterCatalogConsumer(): ConcurrentMessageListenerContainer<String, IntegrationMetadata> =
         parameterizedListenerContainerFactoryService
             .createRecordListenerContainerFactory(
                 IntegrationMetadata::class.java,
@@ -142,7 +151,7 @@ class IntegrationMetadataEventIdempotencyIntegrationTest {
                 ),
             ).createContainer(
                 IntegrationMetadataEventConsumerConfiguration.integrationMetadataEventTopicNameParameters(),
-            )
+            ).also { catalogServiceConsumer = it }
 
     private fun publish(version: Long) {
         parameterizedTemplateFactory
