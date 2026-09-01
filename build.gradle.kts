@@ -86,7 +86,7 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.6.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("no.novari:flyt-catalog-contract-fixtures:1.0.0-rc-5")
+    testImplementation("no.novari:flyt-catalog-contract-fixtures:1.0.0-rc-6")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.testcontainers:junit-jupiter")
