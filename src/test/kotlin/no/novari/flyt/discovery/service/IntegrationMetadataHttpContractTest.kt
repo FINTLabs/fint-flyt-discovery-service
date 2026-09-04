@@ -14,12 +14,15 @@ import no.novari.flyt.discovery.service.model.dtos.IntegrationMetadataDto
 import no.novari.flyt.discovery.service.model.entities.InstanceValueMetadata
 import no.novari.flyt.discovery.service.validation.ValidationErrorsFormattingService
 import no.novari.flyt.webresourceserver.security.user.UserAuthorizationService
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.security.core.Authentication
@@ -72,7 +75,41 @@ class IntegrationMetadataHttpContractTest {
             objectMapper = OBJECT_MAPPER,
             customizeRequest = { it.principal(authentication) },
         ).verify(fixture)
+
+        verifyDeserializedRequestFor(fixture)
     }
+
+    /**
+     * Responsen dekker ikke request-kontrakten på denne flaten: POST svarer med tom body, så et felt
+     * som forsvinner fra IntegrationMetadataDto ville blitt stille ignorert av Jackson og gitt 200
+     * likevel. Sammenligningen er rekursiv fordi hele treet er kontrakt - gateways bygget på
+     * flyt-web-instance-gateway sender det.
+     */
+    private fun verifyDeserializedRequestFor(fixture: HttpContractFixture) {
+        if (fixture.id != "discovery/post/ok") {
+            return
+        }
+
+        val posted = argumentCaptor<IntegrationMetadataDto>()
+        verify(integrationMetadataService).save(posted.capture())
+
+        assertThat(posted.firstValue)
+            .usingRecursiveComparison()
+            .isEqualTo(postedMetadata())
+    }
+
+    private fun postedMetadata() =
+        IntegrationMetadataDto(
+            sourceApplicationId = 1L,
+            sourceApplicationIntegrationId = "kildeapp-integrasjon",
+            sourceApplicationIntegrationUri = "https://kildeapp.example/integrasjon/1",
+            integrationDisplayName = "Byggesak",
+            version = 1L,
+            instanceMetadata =
+                InstanceMetadataContentDto(
+                    instanceValueMetadata = listOf(value("Tittel", InstanceValueMetadata.Type.STRING, "tittel")),
+                ),
+        )
 
     private fun stubServiceLayerFor(fixture: HttpContractFixture) {
         when (fixture.id) {

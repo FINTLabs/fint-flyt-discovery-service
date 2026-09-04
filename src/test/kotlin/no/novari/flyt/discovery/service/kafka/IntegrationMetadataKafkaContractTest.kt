@@ -7,6 +7,7 @@ import no.novari.flyt.discovery.service.model.dtos.InstanceMetadataCategoryDto
 import no.novari.flyt.discovery.service.model.dtos.InstanceMetadataContentDto
 import no.novari.flyt.discovery.service.model.dtos.InstanceObjectCollectionMetadataDto
 import no.novari.flyt.discovery.service.model.dtos.InstanceValueMetadataDto
+import no.novari.flyt.discovery.service.model.entities.InstanceMetadataContent
 import no.novari.flyt.discovery.service.model.entities.InstanceValueMetadata
 import no.novari.flyt.discovery.service.model.entities.IntegrationMetadata
 import org.assertj.core.api.Assertions.assertThat
@@ -71,20 +72,44 @@ class IntegrationMetadataKafkaContractTest {
         runner.verifySerialization(fixture, null)
     }
 
+    /**
+     * Sammenligningen er rekursiv, ikke via equals: IntegrationMetadata sammenligner bare på id, så
+     * isEqualTo ville passert uansett hva de øvrige feltene inneholdt. Hele treet må med - det er
+     * her BOOLEAN og displayName fastholdes, og de er blant duplikatene FFS-2256 skal samordne.
+     */
     @Test
-    fun `hendelsen bærer instansmetadata inn, og idempotensnøkkelen med den`() {
+    fun `hendelsen bærer hele treet inn, ikke bare idempotensnøkkelen`() {
         val fixture = CatalogContractFixtures.kafkaById("discovery/event/integration-metadata-received")
 
         val received = runner.deserialize<IntegrationMetadata>(fixture)
 
-        checkNotNull(received)
-        assertThat(received.sourceApplicationId).isEqualTo(1L)
-        assertThat(received.sourceApplicationIntegrationId).isEqualTo("kildeapp-integrasjon")
-        assertThat(received.version).isEqualTo(1L)
-        assertThat(received.instanceMetadata?.instanceValueMetadata)
-            .extracting<String> { it.key }
-            .containsExactly("tittel", "erHastesak")
+        assertThat(received)
+            .usingRecursiveComparison()
+            .isEqualTo(receivedEventAsModel())
     }
+
+    private fun receivedEventAsModel() =
+        IntegrationMetadata(
+            sourceApplicationId = 1L,
+            sourceApplicationIntegrationId = "kildeapp-integrasjon",
+            sourceApplicationIntegrationUri = "https://kildeapp.example/integrasjon/1",
+            integrationDisplayName = "Byggesak",
+            version = 1L,
+            instanceMetadata =
+                InstanceMetadataContent(
+                    instanceValueMetadata =
+                        mutableListOf(
+                            valueMetadata("Tittel", InstanceValueMetadata.Type.STRING, "tittel"),
+                            valueMetadata("Er hastesak", InstanceValueMetadata.Type.BOOLEAN, "erHastesak"),
+                        ),
+                ),
+        )
+
+    private fun valueMetadata(
+        displayName: String,
+        type: InstanceValueMetadata.Type,
+        key: String,
+    ) = InstanceValueMetadata(displayName = displayName, type = type, key = key)
 
     private fun storedMetadata() =
         IntegrationMetadata(
