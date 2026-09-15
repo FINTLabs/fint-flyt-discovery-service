@@ -26,6 +26,8 @@ plugins {
 group = "no.novari"
 version = "0.0.1-SNAPSHOT"
 
+var springdocOpenApiVersion = "2.8.17"
+
 kotlin {
     jvmToolchain(25)
 }
@@ -69,6 +71,7 @@ dependencies {
     compileOnly("org.springframework.security:spring-security-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
 
     implementation("no.novari:flyt-web-resource-server:4.0.0")
     implementation("no.novari:flyt-audit-starter:1.1.0")
