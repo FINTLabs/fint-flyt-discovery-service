@@ -38,6 +38,24 @@ Base path: `/api/intern/metadata`
 All endpoints are secured. `UserAuthorizationService` checks the caller’s access to the referenced
 `sourceApplicationId` through authorization-service and returns `403 Forbidden` when access is denied.
 
+### OpenAPI Documentation
+
+Swagger UI and the generated OpenAPI specification are available only through direct service access, such as a
+Kubernetes port-forward. Their paths sit outside the external ingress route for `/api/intern/metadata`:
+
+- Swagger UI: `/swagger-ui.html`
+- OpenAPI JSON: `/v3/api-docs`
+- OpenAPI YAML: `/v3/api-docs.yaml`
+
+For the FINTLabs beta deployment:
+
+```shell
+kubectl -n fintlabs-no port-forward service/fint-flyt-discovery-service 8080:8080
+```
+
+Swagger UI is then available at `http://localhost:8080/beta/fintlabs-no/swagger-ui.html`, and OpenAPI JSON at
+`http://localhost:8080/beta/fintlabs-no/v3/api-docs`.
+
 ## Kafka Integration
 
 - Consumes `integration-metadata-received` events (prefixed with org/context from `TopicNamePrefixParameters`) with 1 partition and 7-day retention; duplicates (same source application, integration ID, and version) are logged and skipped.
