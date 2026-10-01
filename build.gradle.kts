@@ -80,6 +80,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql")
 
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+    runtimeOnly("net.logstash.logback:logstash-logback-encoder:9.0")
     runtimeOnly("org.postgresql:postgresql")
     testRuntimeOnly("com.h2database:h2")
 
