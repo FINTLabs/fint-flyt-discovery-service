@@ -107,7 +107,7 @@ SPRING_PROFILES_ACTIVE=local-staging ./gradlew bootRun  # run with local Kafka/P
 
 Point `spring.kafka.bootstrap-servers` to your dev broker (default `localhost:9092` in `application-local-staging.yaml`). Override datasource settings if you use a different Postgres setup.
 
-Add `--profile tools` to also start Kafdrop on http://localhost:19000. `docker compose down -v` stops everything and wipes the data.
+Add `--profile tools` to also start Kafdrop on http://localhost:19000. Kafka topics and the database are empty on every start.
 
 ## Deployment
 
