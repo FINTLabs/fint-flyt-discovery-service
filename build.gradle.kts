@@ -32,10 +32,6 @@ kotlin {
     jvmToolchain(25)
 }
 
-configurations {
-    compileOnly
-}
-
 tasks.jar {
     isEnabled = false
 }
@@ -46,6 +42,7 @@ repositories {
     mavenLocal()
 }
 
+extra["commons-lang3.version"] = "3.21.0"
 extra["jackson-bom.version"] = "2.22.3"
 extra["log4j2.version"] = "2.26.1"
 extra["netty.version"] = "4.2.17.Final"
@@ -67,8 +64,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    compileOnly("org.springframework.security:spring-security-config")
-    compileOnly("org.springframework.security:spring-security-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -84,12 +79,6 @@ dependencies {
     // Pinned to 8.x: 9.x pulls in Jackson 3 (tools.jackson), while Spring Boot 3.5 uses Jackson 2
     runtimeOnly("net.logstash.logback:logstash-logback-encoder:8.1")
     runtimeOnly("org.postgresql:postgresql")
-    testRuntimeOnly("com.h2database:h2")
-
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-    implementation("org.apache.commons:commons-lang3:3.21.0")
-    implementation("org.apache.commons:commons-collections4:4.6.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.novari:flyt-catalog-contract-fixtures:1.1.0")
