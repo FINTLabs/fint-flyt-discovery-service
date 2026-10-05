@@ -93,19 +93,21 @@ Secrets referenced in overlays must supply database credentials, Kafka access, O
 
 Prerequisites:
 - Java 21+
-- Docker (for Postgres helper) and access to a Kafka broker
+- Docker (Docker Compose starts Postgres and Kafka)
 - Gradle (wrapper included)
 
 Useful commands:
 
 ```shell
-./start-postgres          # start Postgres on localhost:5437 with default creds
+docker compose up -d      # start Postgres on localhost:5437 and Kafka on localhost:9092
 ./gradlew clean build     # compile and run tests
 SPRING_PROFILES_ACTIVE=local-staging ./gradlew bootRun  # run with local Kafka/Postgres defaults
 ./gradlew test            # run unit tests
 ```
 
 Point `spring.kafka.bootstrap-servers` to your dev broker (default `localhost:9092` in `application-local-staging.yaml`). Override datasource settings if you use a different Postgres setup.
+
+Add `--profile tools` to also start Kafdrop on http://localhost:19000. Kafka topics and the database are empty on every start.
 
 ## Deployment
 
